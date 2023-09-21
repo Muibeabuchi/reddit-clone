@@ -3,20 +3,23 @@ import {
   Flex,
   Icon,
   Image,
-  Skeleton,
-  Spinner,
+  // Skeleton,
+  // Spinner,
   Stack,
   Text,
 } from "@chakra-ui/react";
 import { Doc } from "convex/_generated/dataModel";
 import moment from "moment";
 import React, { useState } from "react";
-import { AiOutlineDelete } from "react-icons/ai";
-import { BsChat, BsDot } from "react-icons/bs";
-import { FaReddit } from "react-icons/fa";
+// import { AiOutlineDelete } from "react-icons/ai";
+import {
+  BsChat,
+  // BsDot
+} from "react-icons/bs";
+// import { FaReddit } from "react-icons/fa";
 import {
   IoArrowDownCircleOutline,
-  IoArrowBackCircleSharp,
+  // IoArrowBackCircleSharp,
   IoArrowRedoOutline,
   IoArrowUpCircleOutline,
   IoArrowUpCircleSharp,
@@ -45,7 +48,7 @@ function PostItem({
 // onSelectPost,
 // onVote,
 Props) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const voteMutation = useMutation(api.votes.voteOnPost);
   const { user } = useUser();
 
@@ -63,7 +66,7 @@ Props) {
       });
       console.log("voting completeted");
     } catch (error) {
-      setError(error);
+      setMutationError(error);
       console.log("voting error", error);
     } finally {
       setLoadingVote(false);
