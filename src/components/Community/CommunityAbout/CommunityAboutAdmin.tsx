@@ -1,9 +1,5 @@
-"use client";
-
-import { Community, communitiesState } from "@/atoms/communitiesAtom";
-import { auth, db, storage } from "@/firebase/clientApp";
-// import useLiveCommunityData from "@/hooks/useLiveCommunityData";
 import useSelectFile from "@/hooks/useSelectFile";
+import { getUserIdFromIdentityIdentifier } from "@/utils/helperFunctions";
 import {
   Divider,
   Flex,
@@ -13,65 +9,73 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { doc, updateDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadString } from "firebase/storage";
-import { useParams } from "next/navigation";
+import { useUser } from "@clerk/clerk-react";
+import { Doc } from "convex/_generated/dataModel";
 import React from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { FaReddit } from "react-icons/fa";
-import { useSetRecoilState } from "recoil";
+import { useParams } from "react-router-dom";
+
+import { useMutation } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
 
 type Props = {
-  communityData: Community;
+  communityData: Doc<"community">;
 };
 
 const CommunityAboutAdmin = ({ communityData }: Props) => {
-  const [user] = useAuthState(auth);
-  const { communitypage } = useParams();
+  const { user } = useUser();
+  const { communityName } = useParams<{ communityName: string }>();
   const { selectedFile, setSelectedFile, onSelectImage } = useSelectFile();
   const [uploadingImage, setUploadingImage] = React.useState(false);
   const selectedFileRef = React.useRef<HTMLInputElement>(null);
-  // const { communitySnapshotData, snapshotLoading } =
-  //   useLiveCommunityData(communitypage);
-  const setCommunityStateValue = useSetRecoilState(communitiesState);
+  // const setCommunityStateValue = useSetRecoilState(communitiesState);
+
+  // generate shortlived upload url
+  const generateUploadUrl = useMutation(api.community.generateUploadUrl);
+  const updateCommunityImage = useMutation(api.community.mutateCommunityImage);
+
+  const [image, setImage] = React.useState<File | null>(null);
+
   // create function for updating the community imageUrl
   async function onUpdateImage() {
-    // console.log("startr uploading");
     if (!selectedFile) return;
-    // console.log("there is a selected file");
+    if (!image) return;
+    if (!communityName) return;
+    if (!user?.id) return;
+
     setUploadingImage(true);
+    // todo write uploading community image logic here
     try {
-      // create a reference to the image you wana create
-      const imageRef = ref(storage, `communities/${communityData.id}/image`);
-      // upload the image to the cloud storage
-      await uploadString(imageRef, selectedFile, "data_url");
-      // get the download url
-      const downloadUrl = await getDownloadURL(imageRef);
-      // update the image url in the community document
-      await updateDoc(doc(db, "community", communityData.id), {
-        imageUrl: downloadUrl,
+      const postUrl = await generateUploadUrl();
+      // Step 2: POST the file to the URL
+      const result = await fetch(postUrl, {
+        method: "POST",
+        headers: { "Content-Type": image!.type },
+        body: selectedFile,
       });
+      const json = await result.json();
+      if (!result.ok) {
+        throw new Error(`Upload failed: ${JSON.stringify(json)}`);
+      }
+      const { storageId } = json;
+      await updateCommunityImage({
+        storageId,
+        author: user?.id,
+        communityName: communityName,
+      });
+
       setSelectedFile("");
-
-      // Do i really need to update my recoil state?
-      setCommunityStateValue((prev) => ({
-        ...prev,
-        currentCommunity: {
-          ...prev.currentCommunity,
-          imageUrl: downloadUrl,
-        } as Community,
-      }));
-
-      setUploadingImage(false);
-    } catch (error: any) {
-      // console.log("update community image url " + error.mesage);
+      setImage(null);
+    } catch (error) {
+      console.log(error);
+    } finally {
       setUploadingImage(false);
     }
   }
-  // console.log(communityData);
   return (
     <>
-      {user?.uid === communityData?.creatorId && (
+      {user?.id ===
+        getUserIdFromIdentityIdentifier(communityData?.creatorId) && (
         <>
           <Divider />
           <Stack spacing={1} fontSize="10pt">
@@ -89,11 +93,15 @@ const CommunityAboutAdmin = ({ communityData }: Props) => {
                 hidden
                 ref={selectedFileRef}
                 type="file"
-                onChange={onSelectImage}
+                onChange={(e) => {
+                  onSelectImage(e);
+                  if (!e.target.files?.[0]) return;
+                  setImage(e.target.files?.[0]);
+                }}
               />
-              {communityData?.imageUrl || selectedFile ? (
+              {communityData?.communityImage || selectedFile ? (
                 <Image
-                  src={selectedFile || communityData?.imageUrl}
+                  src={selectedFile || communityData?.communityImage}
                   alt="community image url"
                   borderRadius={4}
                   boxSize="40px"

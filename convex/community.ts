@@ -1,3 +1,4 @@
+// import { api } from "./_generated/api";
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
@@ -55,7 +56,7 @@ export const createCommunity = mutation({
       communityName: args.communityName,
       communityType: args.communityType,
       creatorId: tokenIdentifier,
-      communityImage: args.communityImage,
+      communityImage: "",
     });
 
     // patch not add
@@ -159,5 +160,43 @@ export const joinOrLeaveCommunity = mutation({
 
     // if the user is a member, remove the community id from the users community array and remove the userid from the community table..using the name of the community since it is unique
     // if the user is not a member, add the communityId to the users coommunity array and add the userId to the communityTable
+  },
+});
+
+export const generateUploadUrl = mutation(async (ctx) => {
+  return await ctx.storage.generateUploadUrl();
+});
+
+export const mutateCommunityImage = mutation({
+  args: {
+    storageId: v.string(),
+    author: v.string(),
+    communityName: v.string(),
+  },
+  handler: async (ctx, args) => {
+    // check if the person updating the community image is the community creator
+
+    const communityRef = await ctx.db
+      .query("community")
+      .withIndex("by_communityName", (q) =>
+        q.eq("communityName", args.communityName)
+      )
+      .unique();
+
+    // console.log(
+    //   `${import.meta.env.VITE_CLERK_JWT_ISSUER_DOMAIN}|${args.author}`
+    // );
+
+    if (!communityRef)
+      throw new Error("Failed to get community data from convex");
+
+    const isCommunityCreator =
+      communityRef?.creatorId ===
+      `https://dynamic-horse-22.clerk.accounts.dev|${args.author}`;
+
+    if (!isCommunityCreator)
+      throw new Error("You are not allowed to update thi community's image");
+    // update the communities image
+    await ctx.db.patch(communityRef._id, { communityImage: args.storageId });
   },
 });
