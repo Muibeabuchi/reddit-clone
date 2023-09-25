@@ -74,15 +74,21 @@ export const getCommunityData = query({
   handler: async (ctx, args) => {
     const { communityName } = args;
 
-    const communityData = ctx.db
+    const communityData = await ctx.db
       .query("community")
       .withIndex("by_communityName", function (q) {
         return q.eq("communityName", communityName);
       })
       .unique();
 
-    if (!getCommunityData) throw new Error("This community does not exist");
-
+    if (!communityData) throw new Error("This community does not exist");
+    if (communityData.communityImage) {
+      const communityImage = await ctx.storage.getUrl(
+        communityData?.communityImage
+      );
+      if (!communityImage) return;
+      communityData.communityImage = communityImage;
+    }
     return communityData;
   },
 });

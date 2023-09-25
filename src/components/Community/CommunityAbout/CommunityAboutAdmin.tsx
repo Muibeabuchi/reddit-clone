@@ -51,7 +51,7 @@ const CommunityAboutAdmin = ({ communityData }: Props) => {
       const result = await fetch(postUrl, {
         method: "POST",
         headers: { "Content-Type": image!.type },
-        body: selectedFile,
+        body: image,
       });
       const json = await result.json();
       if (!result.ok) {

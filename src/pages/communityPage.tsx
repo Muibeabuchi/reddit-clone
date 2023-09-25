@@ -26,6 +26,8 @@ const CommunityPage = () => {
     communityName,
   });
 
+  console.log(communityData);
+
   if (!communityData) return;
   if (!communityVotes) return;
 
