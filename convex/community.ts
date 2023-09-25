@@ -202,6 +202,8 @@ export const mutateCommunityImage = mutation({
 
     if (!isCommunityCreator)
       throw new Error("You are not allowed to update thi community's image");
+    // delete the old communities photo from file storage
+    await ctx.storage.delete(communityRef.communityImage as string);
     // update the communities image
     await ctx.db.patch(communityRef._id, { communityImage: args.storageId });
   },
