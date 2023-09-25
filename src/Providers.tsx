@@ -8,6 +8,7 @@ import AppLayout from "./layout/appLayout";
 import Homepage from "./pages/homepage";
 import CommunityPage from "./pages/communityPage";
 import CommunitySubmit from "./pages/communitySubmit";
+import CommunityErrorPage from "./pages/CommunityErrorPage";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
       {
         path: "r/:communityName",
         element: <CommunityPage />,
+        errorElement: <CommunityErrorPage />,
       },
       {
         path: "/r/:communityName/submit",

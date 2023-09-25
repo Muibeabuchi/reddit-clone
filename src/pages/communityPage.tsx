@@ -3,7 +3,7 @@ import CommunityHeader from "@/components/Community/CommunityHeader";
 import PageLayout from "@/layout/pageLayout";
 import CommunityCreatePostLink from "@/components/Community/CommunityCreatePostLink";
 import Posts from "@/components/Posts/Posts";
-// import CommunityAbout from "@/components/Community/CommunityAbout/CommunityAbout";
+import CommunityAbout from "@/components/Community/CommunityAbout/CommunityAbout";
 // import { useRecoilState, useSetRecoilState } from "recoil";
 import { useParams } from "react-router-dom";
 import { useQuery } from "convex/react";
@@ -44,7 +44,7 @@ const CommunityPage = () => {
           />
         </>
         <>
-          {/* <CommunityAbout communityData={communityState.currentCommunity} /> */}
+          <CommunityAbout communityData={communityData} />
         </>
       </PageLayout>
     </>
