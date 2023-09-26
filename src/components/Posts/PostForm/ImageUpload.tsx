@@ -1,17 +1,20 @@
 import { Image } from "@chakra-ui/react";
 import { Button, Flex, Stack } from "@chakra-ui/react";
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 
 type Props = {
   onSelectImage: (e: React.ChangeEvent<HTMLInputElement>) => void;
   selectedFile?: string;
   setSelectedTab: (value: string) => void;
-  setSelectedFile: (value: string) => void;
+  setSelectedFile: React.Dispatch<React.SetStateAction<string>>;
+  postImage: File | null;
+  setPostImage: Dispatch<SetStateAction<File | null>>;
 };
 
 export default function ImageUpload({
   onSelectImage,
   selectedFile,
+  setPostImage,
   setSelectedFile,
   setSelectedTab,
 }: Props) {
@@ -33,7 +36,10 @@ export default function ImageUpload({
             <Button
               height="28px"
               variant="outline"
-              onClick={() => setSelectedFile("")}
+              onClick={() => {
+                setSelectedFile("");
+                setPostImage(null);
+              }}
             >
               Remove
             </Button>
@@ -60,7 +66,11 @@ export default function ImageUpload({
             type="file"
             hidden={true}
             ref={selectedFileRef}
-            onChange={onSelectImage}
+            onChange={(e) => {
+              onSelectImage(e);
+              if (!e.target.files?.[0]) return;
+              setPostImage(e.target.files?.[0]);
+            }}
           />
         </Flex>
       )}

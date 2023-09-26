@@ -13,6 +13,7 @@ import useSelectFile from "@/hooks/useSelectFile";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useNavigate } from "react-router-dom";
+import useCreatePostImage from "@/hooks/useCreatePostImage";
 
 interface IAppProps {
   communityName: string | undefined;
@@ -55,8 +56,10 @@ const NewPostForm: React.FunctionComponent<IAppProps> = ({ communityName }) => {
     body: "",
   });
   const { setSelectedFile, selectedFile, onSelectImage } = useSelectFile();
+  const { setPostImage, postImage, handleCreatePostImage, isLoading } =
+    useCreatePostImage();
   const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState(false);
+  // const [error, setError] = React.useState(false);
   function onTextChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
@@ -71,13 +74,15 @@ const NewPostForm: React.FunctionComponent<IAppProps> = ({ communityName }) => {
     console.log("creating the post");
     if (!communityName) return;
     setLoading(true);
+
     try {
+      const postImageId = await handleCreatePostImage();
       await mutation({
         communityName,
         numberOfVotes: 0,
         postBody: textInputs.body,
         postTitle: textInputs.title,
-        postImageUrl: selectedFile ?? "",
+        postImageId: postImageId ?? "",
       });
       setTextInputs({
         body: "",
@@ -86,7 +91,7 @@ const NewPostForm: React.FunctionComponent<IAppProps> = ({ communityName }) => {
       navigate(`/r/${communityName}`);
     } catch (error) {
       console.log("creating post error", error);
-      setError(true);
+      // setError(true);
     } finally {
       setLoading(false);
     }
@@ -116,9 +121,11 @@ const NewPostForm: React.FunctionComponent<IAppProps> = ({ communityName }) => {
         )}
         {selectedTab === "Images & Video" && (
           <ImageUpload
+            postImage={postImage}
             selectedFile={selectedFile}
             onSelectImage={onSelectImage}
             setSelectedTab={setSelectedTab}
+            setPostImage={setPostImage}
             setSelectedFile={setSelectedFile}
           />
         )}

@@ -30,7 +30,7 @@ export default defineSchema({
     numberOfComments: v.number(),
     communityImageUrl: v.optional(v.string()),
     numberOfVotes: v.number(),
-    postImageUrl: v.optional(v.string()),
+    postImageId: v.optional(v.string()),
   })
     .index("by_authorId", ["authorId"])
     .index("by_communityId", ["communityId"]),

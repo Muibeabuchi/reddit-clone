@@ -5,7 +5,7 @@ const createPostArgs = {
   // get the posters profile id and name on the server
   postBody: v.string(),
   postTitle: v.string(),
-  postImageUrl: v.optional(v.string()),
+  postImageId: v.optional(v.string()),
   // we pass in the community_id and community_name
   //   communityId: v.id("community"),
   communityName: v.string(),
@@ -46,16 +46,18 @@ export const createPost = mutation({
     if (!communityRef) throw new Error("community could not be found");
 
     //? create the object that is to be passed to the mutation
+
+    // save the post image if it exists
     const postId = await ctx.db.insert("posts", {
       authorId: profileId._id,
       authorName: profileId.profileName,
       communityId: communityRef._id,
       communityName: args.communityName,
-      communityImageUrl: args.postImageUrl,
+      communityImageUrl: communityRef.communityImage,
       numberOfComments: 0,
       numberOfVotes: 0,
       postBody: args.postBody,
-      postImageUrl: args.postImageUrl,
+      postImageId: args.postImageId,
       postTitle: args.postTitle,
     });
     return postId;
