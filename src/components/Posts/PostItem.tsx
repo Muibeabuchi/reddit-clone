@@ -52,6 +52,8 @@ Props) {
   const voteMutation = useMutation(api.votes.voteOnPost);
   const { user } = useUser();
 
+  console.log(post);
+
   // const [loadingImage, setLoadingImage] = React.useState(true);
   const [mutationError, setMutationError] = React.useState();
   // const [loadingDelete, setLoadingDelete] = React.useState(false);
@@ -147,11 +149,11 @@ Props) {
             {post.postTitle}
           </Text>
           <Text fontSize={"10pt"}>{post.postBody}</Text>
-          {post.postImageUrl && (
+          {post.postImageId && (
             <Flex justify={"center"} align="center" p={2}>
               {/* <Skeleton isLoaded={!loadingImage}> */}
               <Image
-                src={post.postImageUrl}
+                src={post.postImageId}
                 alt="post image"
                 maxH="460px"
                 // onLoad={() => setLoadingImage(false)}

@@ -42,5 +42,6 @@ export default defineSchema({
     postId: v.id("posts"),
   })
     .index("by_communityName_voterId", ["communityName", "voterId"])
-    .index("by_postId_voterId", ["postId", "voterId"]),
+    .index("by_postId_voterId", ["postId", "voterId"])
+    .index("by_PostIndex", ["postId"]),
 });

@@ -83,6 +83,27 @@ export const getCommunityPosts = query({
       .order("desc")
       .take(10);
 
-    return communityPosts;
+    // get the imageurl of each post
+    const communityPostWithImages = Promise.all(
+      communityPosts.map(async (post) => {
+        const postImage = post.postImageId
+          ? await ctx.storage.getUrl(post.postImageId)
+          : "";
+        return { ...post, postImageId: postImage };
+      })
+    );
+
+    // todo ===== fetch vote data for posts
+    // const communityPostsWithVotes = Promise.all(
+    //   communityPosts.map(async (post) => {
+    //     const postVoters = await ctx.db
+    //       .query("votes")
+    //       .withIndex("by_PostIndex", (q) => q.eq("postId", post._id))
+    //       .collect();
+    //       return {...post,votes:postVoters}
+    //   })
+    // );
+
+    return communityPostWithImages;
   },
 });
