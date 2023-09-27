@@ -19,6 +19,7 @@ import { Id } from "convex/_generated/dataModel";
 import PostLoader from "@/components/Posts/PostLoader";
 import PostItem from "@/components/Posts/PostItem";
 import Comments from "@/components/Posts/Comments";
+import CommunityAbout from "@/components/Community/CommunityAbout/CommunityAbout";
 
 // type PostPageProps = {};
 
@@ -29,6 +30,11 @@ const PostPage = () => {
     postId: postId as Id<"posts">,
   });
 
+  const communityData = useQuery(api.community.getCommunityData, {
+    communityName: communityName as string,
+  });
+
+  if (!communityData) return;
   console.log(post?.postVotes);
   return (
     <PageLayout>
@@ -71,13 +77,16 @@ const PostPage = () => {
       </>
       {/* Right Content */}
       <>
-        {/* <About
-          communityData={
-            communityStateValue.currentCommunity
-            // communityStateValue.visitedCommunities[community as string]
-          }
-          loading={loading}
-        /> */}
+        <CommunityAbout
+          communityData={communityData}
+
+          // communityData={
+
+          //   // communityStateValue.currentCommunity
+          //   // communityStateValue.visitedCommunities[community as string]
+          // }
+          // loading={loading}
+        />
       </>
     </PageLayout>
   );
