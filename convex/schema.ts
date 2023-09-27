@@ -44,4 +44,13 @@ export default defineSchema({
     .index("by_communityName_voterId", ["communityName", "voterId"])
     .index("by_postId_voterId", ["postId", "voterId"])
     .index("by_PostIndex", ["postId"]),
+
+  comments: defineTable({
+    commentBody: v.string(),
+    communityName: v.string(),
+    communityId: v.id("community"),
+    postId: v.id("posts"),
+  })
+    .index("by_postId", ["postId"])
+    .index("by_communityName", ["communityName"]),
 });
