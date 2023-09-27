@@ -3,6 +3,9 @@ import NewPostForm from "@/components/Posts/NewPostForm";
 import PostHeading from "@/components/Posts/PostForm/PostHeading";
 
 import { useParams } from "react-router-dom";
+import CommunityAbout from "@/components/Community/CommunityAbout/CommunityAbout";
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
 
 // type SubmitPageProps = {
 //   params: {
@@ -12,18 +15,26 @@ import { useParams } from "react-router-dom";
 
 const SubmitPage = () => {
   const { communityName } = useParams();
-  console.log(communityName);
+  // console.log(communityName);
   // const communityData = await getCommunityData(communitypage);
   // if (!communityData || communityData == null) {
   //   notFound();
   // }
+
+  const communityData = useQuery(api.community.getCommunityData, {
+    communityName: communityName as string,
+  });
+
+  if (!communityData) return;
   return (
     <PageLayout>
       <>
         <PostHeading />
         <NewPostForm communityName={communityName} />
       </>
-      <>right side</>
+      <>
+        <CommunityAbout communityData={communityData} />
+      </>
     </PageLayout>
   );
 };
