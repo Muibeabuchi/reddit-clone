@@ -82,7 +82,7 @@ const NewPostForm: React.FunctionComponent<IAppProps> = ({ communityName }) => {
         numberOfVotes: 0,
         postBody: textInputs.body,
         postTitle: textInputs.title,
-        postImageId: postImageId ?? "",
+        postImageId: postImageId ? postImageId : "",
       });
       setTextInputs({
         body: "",

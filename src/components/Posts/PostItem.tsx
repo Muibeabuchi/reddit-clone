@@ -4,19 +4,19 @@ import {
   Icon,
   Image,
   // Skeleton,
-  // Spinner,
+  Spinner,
   Stack,
   Text,
 } from "@chakra-ui/react";
 import { Doc } from "convex/_generated/dataModel";
 import moment from "moment";
 import React, { useState } from "react";
-// import { AiOutlineDelete } from "react-icons/ai";
+import { AiOutlineDelete } from "react-icons/ai";
 import {
   BsChat,
   // BsDot
 } from "react-icons/bs";
-// import { FaReddit } from "react-icons/fa";
+import { FaReddit } from "react-icons/fa";
 import {
   IoArrowDownCircleOutline,
   // IoArrowBackCircleSharp,
@@ -30,6 +30,8 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useUser } from "@clerk/clerk-react";
+import { getUserIdFromIdentityIdentifier } from "@/utils/helperFunctions";
+import useDeletePost from "@/hooks/useDeletePost";
 
 type Props = {
   post: Doc<"posts">;
@@ -52,12 +54,18 @@ Props) {
   const voteMutation = useMutation(api.votes.voteOnPost);
   const { user } = useUser();
 
-  console.log(post);
+  // const userIsCreator =
+  //   getUserIdFromIdentityIdentifier(post.) === user?.id;
+
+  // console.log(userIsCreator);
+  console.log(post.authorId);
 
   // const [loadingImage, setLoadingImage] = React.useState(true);
+
   const [mutationError, setMutationError] = React.useState();
-  // const [loadingDelete, setLoadingDelete] = React.useState(false);
   const [loadingVote, setLoadingVote] = useState(false);
+
+  const { handlePostDelete, loadingDelete } = useDeletePost();
 
   async function onVote(voteStatus: 1 | -1) {
     setLoadingVote(true);
@@ -193,25 +201,25 @@ Props) {
             <Icon as={IoBookmarkOutline} mr={2} />
             <Text fontSize={"9pt"}>Save</Text>
           </Flex>
-          {/* {userIsCreator && (
-            <Flex
-              align={"center"}
-              p="8px 10px"
-              borderRadius={4}
-              _hover={{ bg: "gray.200" }}
-              cursor={"pointer"}
-              onClick={handleDelete}
-            >
-              {loadingDelete ? (
-                <Spinner size="sm" />
-              ) : (
-                <>
-                  <Icon as={AiOutlineDelete} mr={2} />
-                  <Text fontSize={"9pt"}>Delete</Text>
-                </>
-              )}
-            </Flex>
-          )} */}
+          {/* {userIsCreator && ( */}
+          <Flex
+            align={"center"}
+            p="8px 10px"
+            borderRadius={4}
+            _hover={{ bg: "gray.200" }}
+            cursor={"pointer"}
+            onClick={() => handlePostDelete(post._id)}
+          >
+            {loadingDelete ? (
+              <Spinner size="sm" />
+            ) : (
+              <>
+                <Icon as={AiOutlineDelete} mr={2} />
+                <Text fontSize={"9pt"}>Delete</Text>
+              </>
+            )}
+          </Flex>
+          {/* )} */}
         </Flex>
       </Flex>
     </Flex>

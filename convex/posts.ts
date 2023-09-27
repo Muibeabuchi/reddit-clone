@@ -107,3 +107,52 @@ export const getCommunityPosts = query({
     return communityPostWithImages;
   },
 });
+
+export const deleteCommunityPost = mutation({
+  args: {
+    postId: v.id("posts"), //the user has to pass the his/her userid to confirm that the post is theirs
+  },
+  handler: async (ctx, args) => {
+    // check if the user is authenticated
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Called deletePost without authentication present");
+    }
+    // get users tokenidentifier,which is same as profileId
+    const { tokenIdentifier } = identity;
+
+    const profileId = await ctx.db
+      .query("profile")
+      .withIndex("by_token", (q) => q.eq("tokenIdentifier", tokenIdentifier))
+
+      .unique();
+
+    if (!profileId) throw new Error("the user has no profile in database");
+    // use postId to query post table and get the ostref, extract post author to verify ownership of post
+    const postRef = await ctx.db.get(args.postId);
+    if (!postRef) throw new Error("the post does not exist");
+
+    const isAllowedToDelete = postRef?.authorId === profileId?._id;
+
+    if (!isAllowedToDelete)
+      throw new Error("user is not permitted to delete this post");
+
+    // find all the votes on a post and delete them
+    const postsVotes = await ctx.db
+      .query("votes")
+      .withIndex("by_PostIndex", (q) => q.eq("postId", args.postId))
+      .collect();
+
+    // map through all of them and delete them
+    Promise.all(
+      postsVotes.map(async (vote) => {
+        await ctx.db.delete(vote._id);
+      })
+    );
+
+    // todo ------ we also delete all comments on a post
+
+    // if user is author of post, delete the post
+    const deletePost = await ctx.db.delete(args.postId);
+  },
+});
