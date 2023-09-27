@@ -2,24 +2,26 @@
 import PostItem from "./PostItem";
 import { Stack } from "@chakra-ui/react";
 import PostLoader from "./PostLoader";
-import { Doc } from "convex/_generated/dataModel";
+// import { Doc } from "convex/_generated/dataModel";
+import { CommunityPostsAndVotes } from "@/pages/communityPage";
 
+// export type postsType =
 type PostsProps = {
-  communityPosts: Doc<"posts">[] | undefined;
-  communityVotes: Doc<"votes">[];
+  communityPosts: CommunityPostsAndVotes[] | undefined;
+  // communityVotes: Doc<"votes">[];
 };
 
 const Posts = ({
   communityPosts,
-  communityVotes,
-}: PostsProps): React.ReactNode => {
+}: // communityVotes,
+PostsProps): React.ReactNode => {
   // const { postStateValue, setPostValue, onDeletePost, onSelectPost, onVote } =
   //   usePosts();communityPosts
 
-  if (!communityPosts) return <PostLoader />;
+  // if (communityPosts === undefined) return <PostLoader />;
   return (
     <>
-      {!communityPosts ? (
+      {communityPosts === undefined ? (
         <PostLoader />
       ) : (
         <Stack spacing={2}>
@@ -30,7 +32,7 @@ const Posts = ({
               // onSelectPost={onSelectPost}
               // onVote={onVote}
               post={post}
-              votes={communityVotes.find((c) => c.postId === post._id)}
+              // votes={communityVotes.find((c) => c.postId === post._id)}
               // userIsCreator={user?.uid === post.creatorId}
             />
           ))}

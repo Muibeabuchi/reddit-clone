@@ -93,6 +93,20 @@ export const getCommunityPosts = query({
       })
     );
 
+    const communityPostWithImagesAndVotes = Promise.all(
+      (await communityPostWithImages).map(async (post) => {
+        const postVotes = await ctx.db
+          .query("votes")
+          .withIndex("by_PostIndex", (q) => q.eq("postId", post._id))
+          .collect();
+
+        return {
+          ...post,
+          postVotes,
+        };
+      })
+    );
+
     // todo ===== fetch vote data for posts
     // const communityPostsWithVotes = Promise.all(
     //   communityPosts.map(async (post) => {
@@ -104,7 +118,7 @@ export const getCommunityPosts = query({
     //   })
     // );
 
-    return communityPostWithImages;
+    return communityPostWithImagesAndVotes;
   },
 });
 
@@ -154,5 +168,36 @@ export const deleteCommunityPost = mutation({
 
     // if user is author of post, delete the post
     const deletePost = await ctx.db.delete(args.postId);
+  },
+});
+
+export const getSinglePost = query({
+  args: {
+    postId: v.id("posts"),
+  },
+  handler: async (ctx, args) => {
+    const post = await ctx.db.get(args.postId);
+    if (!post) throw new Error("the post does not exist!");
+
+    // get image of the post if it exists
+
+    const postImage = post.postImageId
+      ? await ctx.storage.getUrl(post.postImageId)
+      : "";
+
+    // const singlePostWithVotes = post._id
+
+    const postVotes = await ctx.db
+      .query("votes")
+      .withIndex("by_PostIndex", (q) => q.eq("postId", post?._id))
+      .collect();
+
+    const singlePostWithVotes = {
+      ...post,
+      postImageId: postImage || "",
+      postVotes,
+    };
+
+    return singlePostWithVotes;
   },
 });

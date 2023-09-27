@@ -9,9 +9,32 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import PostLoader from "@/components/Posts/PostLoader";
+import { Id } from "convex/_generated/dataModel";
 
-// type CommunityPageProps = {
-// };
+export type CommunityPostsAndVotes = {
+  _id: Id<"posts">;
+  _creationTime: number;
+  communityImageUrl?: string | undefined;
+  communityName: string;
+  authorId: Id<"profile">;
+  authorName: string;
+  communityId: Id<"community">;
+  numberOfComments: number;
+  numberOfVotes: number;
+  postBody: string;
+  postImageId: string;
+  postTitle: string;
+  postVotes: postVotes;
+};
+export type postVotes = {
+  communityId: Id<"community">;
+  communityName: string;
+  postId: Id<"posts">;
+  voteStatus: -1 | 1;
+  voterId: Id<"profile">;
+  _creationTime: number;
+  _id: Id<"votes">;
+}[];
 
 const CommunityPage = () => {
   const params = useParams();
@@ -27,7 +50,8 @@ const CommunityPage = () => {
     communityName,
   });
 
-  console.log(communityData);
+  console.log(communityVotes);
+  console.log(communityPosts);
 
   if (!communityData) return;
   if (!communityVotes) return;
@@ -43,7 +67,7 @@ const CommunityPage = () => {
           <CommunityCreatePostLink communityName={communityName} />
           <Posts
             communityPosts={communityPosts}
-            communityVotes={communityVotes}
+            // communityVotes={communityVotes}
           />
         </>
         <>

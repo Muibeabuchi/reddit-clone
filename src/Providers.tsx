@@ -9,6 +9,7 @@ import Homepage from "./pages/homepage";
 import CommunityPage from "./pages/communityPage";
 import CommunitySubmit from "./pages/communitySubmit";
 import CommunityErrorPage from "./pages/CommunityErrorPage";
+import PostPage from "./pages/postPage";
 
 const router = createBrowserRouter([
   {
@@ -24,8 +25,12 @@ const router = createBrowserRouter([
         errorElement: <CommunityErrorPage />,
       },
       {
-        path: "/r/:communityName/submit",
+        path: "r/:communityName/submit",
         element: <CommunitySubmit />,
+      },
+      {
+        path: "r/:communityName/comments/:postId",
+        element: <PostPage />,
       },
     ],
   },

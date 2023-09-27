@@ -13,7 +13,11 @@ export default function useDeletePost() {
   const [loadingDelete, setLoadingDelete] = useState(false);
   const toast = useToast();
   const deletPost = useMutation(api.posts.deleteCommunityPost);
-  async function handlePostDelete(postId: Id<"posts">) {
+  async function handlePostDelete(
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    postId: Id<"posts">
+  ) {
+    e.stopPropagation();
     setLoadingDelete(true);
     try {
       await deletPost({ postId });

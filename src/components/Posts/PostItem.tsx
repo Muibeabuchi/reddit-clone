@@ -16,7 +16,7 @@ import {
   BsChat,
   // BsDot
 } from "react-icons/bs";
-import { FaReddit } from "react-icons/fa";
+// import { FaReddit } from "react-icons/fa";
 import {
   IoArrowDownCircleOutline,
   // IoArrowBackCircleSharp,
@@ -27,16 +27,17 @@ import {
   IoBookmarkOutline,
 } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useUser } from "@clerk/clerk-react";
-import { getUserIdFromIdentityIdentifier } from "@/utils/helperFunctions";
+// import { getUserIdFromIdentityIdentifier } from "@/utils/helperFunctions";
 import useDeletePost from "@/hooks/useDeletePost";
+import { CommunityPostsAndVotes } from "@/pages/communityPage";
 
 type Props = {
-  post: Doc<"posts">;
+  post: CommunityPostsAndVotes;
   // userIsCreator: boolean;
-  votes: Doc<"votes"> | undefined;
+  // votes: Doc<"votes"> | undefined;
   // onVote: (post: Post, vote: number, communityId: string) => void;
   // onDeletePost: (post: Post) => Promise<boolean>;
   // onSelectPost: () => void;
@@ -44,21 +45,36 @@ type Props = {
 
 function PostItem({
   post,
-  votes,
-}: // userIsCreator,
+}: // votes,
+// userIsCreator,
 // onDeletePost,
 // onSelectPost,
 // onVote,
 Props) {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const voteMutation = useMutation(api.votes.voteOnPost);
   const { user } = useUser();
+
+  const userProfileId = useQuery(api.profile.getUserProfile, {
+    userId: user?.id,
+  });
+
+  const postVotes = post?.postVotes?.find(
+    (vote) => vote.voterId === userProfileId
+  );
+
+  // .find(
+  //   (vote) => vote.voterId === userProfileId
+  // );
+  // if (!post) return;
+  console.log(post);
+  // console.log(userProfileId);
 
   // const userIsCreator =
   //   getUserIdFromIdentityIdentifier(post.) === user?.id;
 
   // console.log(userIsCreator);
-  console.log(post.authorId);
+  // console.log(post.authorId);
 
   // const [loadingImage, setLoadingImage] = React.useState(true);
 
@@ -67,7 +83,11 @@ Props) {
 
   const { handlePostDelete, loadingDelete } = useDeletePost();
 
-  async function onVote(voteStatus: 1 | -1) {
+  async function onVote(
+    e: React.MouseEvent<SVGElement, MouseEvent>,
+    voteStatus: 1 | -1
+  ) {
+    e.stopPropagation();
     setLoadingVote(true);
     try {
       await voteMutation({
@@ -91,7 +111,7 @@ Props) {
       borderRadius={4}
       _hover={{ borderColor: "gray.500" }}
       cursor="pointer"
-      // onClick={() => navigate()}
+      onClick={() => navigate(`/r/${post.communityName}/comments/${post._id}`)}
     >
       <Flex
         direction="column"
@@ -104,40 +124,40 @@ Props) {
         <Icon
           as={
             user
-              ? votes?.voteStatus === 1
+              ? postVotes?.voteStatus === 1
                 ? IoArrowUpCircleSharp
                 : IoArrowUpCircleOutline
               : IoArrowUpCircleOutline
           }
           color={
             user
-              ? votes?.voteStatus === 1
+              ? postVotes?.voteStatus === 1
                 ? "brand.100"
                 : "gray.400"
               : "gray.400"
           }
           fontSize={22}
-          onClick={() => onVote(1)}
+          onClick={(e) => onVote(e, 1)}
           cursor={"pointer"}
         />
         <Text fontSize="9pt">{post.numberOfVotes}</Text>
         <Icon
           as={
             user
-              ? votes?.voteStatus === -1
+              ? postVotes?.voteStatus === -1
                 ? IoArrowDownCircleSharp
                 : IoArrowDownCircleOutline
               : IoArrowDownCircleOutline
           }
           color={
             user
-              ? votes?.voteStatus === -1
+              ? postVotes?.voteStatus === -1
                 ? "#4379ff"
                 : "gray.400"
               : "gray.400"
           }
           fontSize={22}
-          onClick={() => onVote(-1)}
+          onClick={(e) => onVote(e, -1)}
           cursor={"pointer"}
         />
       </Flex>
@@ -177,6 +197,9 @@ Props) {
             borderRadius={4}
             _hover={{ bg: "gray.200" }}
             cursor={"pointer"}
+            onClick={() =>
+              navigate(`/r/${post.communityName}/comments/${post._id}`)
+            }
           >
             <Icon as={BsChat} mr={2} />
             <Text fontSize={"9pt"}>{post.numberOfComments}</Text>
@@ -208,7 +231,7 @@ Props) {
             borderRadius={4}
             _hover={{ bg: "gray.200" }}
             cursor={"pointer"}
-            onClick={() => handlePostDelete(post._id)}
+            onClick={(e) => handlePostDelete(e, post._id)}
           >
             {loadingDelete ? (
               <Spinner size="sm" />

@@ -16,6 +16,7 @@ import type {
 } from "convex/server";
 import type * as community from "../community";
 import type * as posts from "../posts";
+import type * as profile from "../profile";
 import type * as users from "../users";
 import type * as votes from "../votes";
 
@@ -30,6 +31,7 @@ import type * as votes from "../votes";
 declare const fullApi: ApiFromModules<{
   community: typeof community;
   posts: typeof posts;
+  profile: typeof profile;
   users: typeof users;
   votes: typeof votes;
 }>;
