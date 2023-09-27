@@ -5,7 +5,7 @@ const createPostArgs = {
   // get the posters profile id and name on the server
   postBody: v.string(),
   postTitle: v.string(),
-  postImageId: v.optional(v.string()),
+  postImageId: v.string(),
   // we pass in the community_id and community_name
   //   communityId: v.id("community"),
   communityName: v.string(),
@@ -89,7 +89,7 @@ export const getCommunityPosts = query({
         const postImage = post.postImageId
           ? await ctx.storage.getUrl(post.postImageId)
           : "";
-        return { ...post, postImageId: postImage };
+        return { ...post, postImageId: postImage ? postImage : "" };
       })
     );
 

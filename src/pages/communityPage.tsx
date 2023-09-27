@@ -8,6 +8,7 @@ import CommunityAbout from "@/components/Community/CommunityAbout/CommunityAbout
 import { useParams } from "react-router-dom";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import PostLoader from "@/components/Posts/PostLoader";
 
 // type CommunityPageProps = {
 // };

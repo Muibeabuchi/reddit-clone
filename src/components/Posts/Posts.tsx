@@ -15,6 +15,8 @@ const Posts = ({
 }: PostsProps): React.ReactNode => {
   // const { postStateValue, setPostValue, onDeletePost, onSelectPost, onVote } =
   //   usePosts();communityPosts
+
+  if (!communityPosts) return <PostLoader />;
   return (
     <>
       {!communityPosts ? (
