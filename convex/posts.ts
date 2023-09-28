@@ -107,6 +107,21 @@ export const getCommunityPosts = query({
       })
     );
 
+    // const communityPostWithImagesAndVotesAndComments = Promise.all(
+    //   (await communityPostWithImagesAndVotes).map(async (post) => {
+    //     const postComments = await ctx.db
+    //       .query("comments")
+    //       .withIndex("by_postId", (q) => q.eq("postId", post._id))
+    //       .collect();
+
+    //       return {
+    //         ...post,
+    //         numberOfComments
+    //       }
+
+    //   })
+    // );
+
     // todo ===== fetch vote data for posts
     // const communityPostsWithVotes = Promise.all(
     //   communityPosts.map(async (post) => {

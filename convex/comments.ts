@@ -57,6 +57,16 @@ export const createComment = mutation({
     if (!communityRef)
       throw new Error("the comment has no coreesponding community");
 
+    // check if the post exists and get the reference
+    const postRef = await ctx.db.get(args.postId);
+    if (!postRef) throw new Error("the post does not exist");
+
+    // update the number of comments field on the post table
+
+    await ctx.db.patch(args.postId, {
+      numberOfComments: postRef.numberOfComments + 1,
+    });
+
     await ctx.db.insert("comments", {
       authorId: profileRef._id,
       authorName: profileRef.profileName,
@@ -108,6 +118,16 @@ export const deletecomment = mutation({
     // find the comment
     const commentRef = await ctx.db.get(args.commentId);
     if (!commentRef) throw new Error("the comment does not exist");
+
+    // check if the post exists and get the reference
+    const postRef = await ctx.db.get(commentRef.postId);
+    if (!postRef) throw new Error("the post does not exist");
+
+    // update the number of comments field on the post table
+
+    await ctx.db.patch(commentRef.postId, {
+      numberOfComments: postRef.numberOfComments - 1,
+    });
 
     // delete the comment
 
