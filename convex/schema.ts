@@ -50,6 +50,9 @@ export default defineSchema({
     communityName: v.string(),
     communityId: v.id("community"),
     postId: v.id("posts"),
+    authorId: v.id("profile"),
+    authorName: v.string(),
+    numberOfVotes: v.number(),
   })
     .index("by_postId", ["postId"])
     .index("by_communityName", ["communityName"]),

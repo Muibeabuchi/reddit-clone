@@ -1,32 +1,32 @@
 import React, { MouseEventHandler, useState } from "react";
 import { Flex, Textarea, Button, Text } from "@chakra-ui/react";
-import { User } from "firebase/auth";
 import AuthButtons from "../../Navbar/RightContent/AuthButtons";
+import { useUser } from "@clerk/clerk-react";
+import { ReactMutation } from "convex/react";
+import { FunctionReference } from "convex/server";
+import { Id } from "convex/_generated/dataModel";
 
 type CommentInputProps = {
   comment: string;
   setComment: (value: string) => void;
   loading: boolean;
-  user?: User | null;
-  onCreateComment: (comment: string) => void;
+  onCreateComment: () => Promise<void>;
 };
 
 const CommentInput: React.FC<CommentInputProps> = ({
   comment,
   setComment,
   loading,
-  user,
   onCreateComment,
 }) => {
+  const { user } = useUser();
   return (
     <Flex direction="column" position="relative">
       {user ? (
         <>
           <Text mb={1}>
             Comment as{" "}
-            <span style={{ color: "#3182CE" }}>
-              {user?.email?.split("@")[0]}
-            </span>
+            <span style={{ color: "#3182CE" }}>{user.firstName}</span>
           </Text>
           <Textarea
             value={comment}
@@ -39,12 +39,13 @@ const CommentInput: React.FC<CommentInputProps> = ({
             _placeholder={{ color: "gray.500" }}
             _focus={{
               outline: "none",
-              bg: "white",
+              // bg: "white",
               border: "1px solid black",
             }}
           />
           <Flex
             position="absolute"
+            zIndex="10"
             left="1px"
             right={0.1}
             bottom="1px"
@@ -57,7 +58,10 @@ const CommentInput: React.FC<CommentInputProps> = ({
               height="26px"
               disabled={!comment.length}
               isLoading={loading}
-              onClick={() => onCreateComment(comment)}
+              _disabled={{
+                cursor: "not-allowed",
+              }}
+              onClick={() => onCreateComment()}
             >
               Comment
             </Button>

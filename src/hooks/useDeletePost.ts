@@ -51,5 +51,6 @@ export default function useDeletePost() {
     handlePostDelete,
     loadingDelete,
     setLoadingDelete,
+    isSinglePage,
   };
 }

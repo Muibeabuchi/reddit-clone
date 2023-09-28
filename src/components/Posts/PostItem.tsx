@@ -81,7 +81,11 @@ Props) {
   const [mutationError, setMutationError] = React.useState();
   const [loadingVote, setLoadingVote] = useState(false);
 
-  const { handlePostDelete, loadingDelete } = useDeletePost();
+  const {
+    handlePostDelete,
+    loadingDelete,
+    isSinglePage: singlePostView,
+  } = useDeletePost();
 
   async function onVote(
     e: React.MouseEvent<SVGElement, MouseEvent>,
@@ -107,19 +111,19 @@ Props) {
     <Flex
       border="1px solid"
       bg="white"
-      borderColor="gray.300"
-      borderRadius={4}
-      _hover={{ borderColor: "gray.500" }}
-      cursor="pointer"
+      borderColor={singlePostView ? "white" : "gray.300"}
+      borderRadius={singlePostView ? "4px 4px 0px 0px" : 4}
+      cursor={singlePostView ? "unset" : "pointer"}
+      _hover={{ borderColor: singlePostView ? "none" : "gray.500" }}
       onClick={() => navigate(`/r/${post.communityName}/comments/${post._id}`)}
     >
       <Flex
         direction="column"
         align="center"
-        bg="gray.100"
+        bg={singlePostView ? "none" : "gray.100"}
         p={2}
         width="40px"
-        borderRadius={4}
+        borderRadius={singlePostView ? "0" : "3px 0px 0px 3px"}
       >
         <Icon
           as={

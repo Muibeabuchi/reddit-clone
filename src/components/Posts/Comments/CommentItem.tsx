@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { memo, useCallback, useState } from "react";
 import {
   Avatar,
   Box,
@@ -8,38 +8,26 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { Timestamp } from "firebase/firestore";
 import moment from "moment";
 import { FaReddit } from "react-icons/fa";
 import {
   IoArrowDownCircleOutline,
   IoArrowUpCircleOutline,
 } from "react-icons/io5";
-
-export type Comment = {
-  id?: string;
-  creatorId: string;
-  creatorDisplayText: string;
-  creatorPhotoURL: string;
-  communityId: string;
-  postId: string;
-  postTitle: string;
-  text: string;
-  createdAt?: Timestamp;
-};
+import { Doc } from "convex/_generated/dataModel";
 
 type CommentItemProps = {
-  comment: Comment;
-  onDeleteComment: (comment: Comment) => void;
-  isLoading: boolean;
-  userId?: string;
+  comment: Doc<"comments">;
+  // onDeleteComment: (comment: Comment) => void;
+  // isLoading: boolean;
+  // userId?: string;
 };
 
 const CommentItem: React.FC<CommentItemProps> = ({
   comment,
-  onDeleteComment,
-  isLoading,
-  userId,
+  // onDeleteComment,
+  // isLoading,
+  // userId,
 }) => {
   // const [loading, setLoading] = useState(false);
 
@@ -69,16 +57,16 @@ const CommentItem: React.FC<CommentItemProps> = ({
             fontWeight={700}
             _hover={{ textDecoration: "underline", cursor: "pointer" }}
           >
-            {comment.creatorDisplayText}
+            {comment.authorName}
           </Text>
-          {comment.createdAt?.seconds && (
+          {comment._creationTime && (
             <Text color="gray.600">
-              {moment(new Date(comment.createdAt?.seconds * 1000)).fromNow()}
+              {moment(new Date(comment._creationTime)).fromNow()}
             </Text>
           )}
-          {isLoading && <Spinner size="sm" />}
+          {/* {isLoading && <Spinner size="sm" />} */}
         </Stack>
-        <Text fontSize="10pt">{comment.text}</Text>
+        <Text fontSize="10pt">{comment.commentBody}</Text>
         <Stack
           direction="row"
           align="center"
@@ -88,7 +76,10 @@ const CommentItem: React.FC<CommentItemProps> = ({
         >
           <Icon as={IoArrowUpCircleOutline} />
           <Icon as={IoArrowDownCircleOutline} />
-          {userId === comment.creatorId && (
+
+          {/* pass a boolean from hok that sends the usersProfileId */}
+
+          {/* {userId === comment.creatorId && (
             <>
               <Text fontSize="9pt" _hover={{ color: "blue.500" }}>
                 Edit
@@ -101,10 +92,11 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 Delete
               </Text>
             </>
-          )}
+          )} */}
         </Stack>
       </Stack>
     </Flex>
   );
 };
-export default CommentItem;
+const MemoizesComment = memo(CommentItem);
+export default MemoizesComment;

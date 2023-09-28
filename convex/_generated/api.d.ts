@@ -14,6 +14,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as comments from "../comments";
 import type * as community from "../community";
 import type * as posts from "../posts";
 import type * as profile from "../profile";
@@ -29,6 +30,7 @@ import type * as votes from "../votes";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  comments: typeof comments;
   community: typeof community;
   posts: typeof posts;
   profile: typeof profile;

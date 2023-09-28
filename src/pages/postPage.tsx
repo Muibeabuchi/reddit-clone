@@ -65,11 +65,10 @@ const PostPage = () => {
                 // }
                 // router={router}
               />
-              {/* <Comments
-                user={user}
-                community={community as string}
-                selectedPost={postStateValue.selectedPost}
-              /> */}
+              <Comments
+                postId={postId as Id<"posts">}
+                communityName={communityName as string}
+              />
             </>
             {/* )}  */}
           </>
