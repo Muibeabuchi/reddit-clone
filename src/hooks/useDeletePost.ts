@@ -3,6 +3,7 @@ import { api } from "../../convex/_generated/api";
 import { useState } from "react";
 import { Id } from "convex/_generated/dataModel";
 import { useToast } from "@chakra-ui/react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 // const errorMessages = {
 //   "[CONVEX M(posts:deleteCommunityPost)] Uncaught Error: user is not permitted to delete this post":
@@ -10,6 +11,16 @@ import { useToast } from "@chakra-ui/react";
 // };
 
 export default function useDeletePost() {
+  // check if we are on community page or single page
+  const location = useLocation();
+  const x = location.pathname.split("/");
+  const isSinglePage = !!x[3];
+  console.log(isSinglePage);
+
+  const navigate = useNavigate();
+
+  const { communityName } = useParams();
+
   const [loadingDelete, setLoadingDelete] = useState(false);
   const toast = useToast();
   const deletPost = useMutation(api.posts.deleteCommunityPost);
@@ -21,6 +32,7 @@ export default function useDeletePost() {
     setLoadingDelete(true);
     try {
       await deletPost({ postId });
+      if (isSinglePage) return navigate(`/r/${communityName}`);
     } catch (error: {
       message: string;
     }) {

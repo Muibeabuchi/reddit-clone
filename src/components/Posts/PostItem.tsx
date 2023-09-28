@@ -3,7 +3,7 @@ import {
   Flex,
   Icon,
   Image,
-  // Skeleton,
+  Skeleton,
   Spinner,
   Stack,
   Text,
@@ -76,7 +76,7 @@ Props) {
   // console.log(userIsCreator);
   // console.log(post.authorId);
 
-  // const [loadingImage, setLoadingImage] = React.useState(true);
+  const [loadingImage, setLoadingImage] = React.useState(true);
 
   const [mutationError, setMutationError] = React.useState();
   const [loadingVote, setLoadingVote] = useState(false);
@@ -179,14 +179,14 @@ Props) {
           <Text fontSize={"10pt"}>{post.postBody}</Text>
           {post.postImageId && (
             <Flex justify={"center"} align="center" p={2}>
-              {/* <Skeleton isLoaded={!loadingImage}> */}
-              <Image
-                src={post.postImageId}
-                alt="post image"
-                maxH="460px"
-                // onLoad={() => setLoadingImage(false)}
-              />
-              {/* </Skeleton> */}
+              <Skeleton isLoaded={!loadingImage}>
+                <Image
+                  src={post.postImageId}
+                  alt="post image"
+                  maxH="460px"
+                  onLoad={() => setLoadingImage(false)}
+                />
+              </Skeleton>
             </Flex>
           )}
         </Stack>
@@ -225,23 +225,25 @@ Props) {
             <Text fontSize={"9pt"}>Save</Text>
           </Flex>
           {/* {userIsCreator && ( */}
-          <Flex
-            align={"center"}
-            p="8px 10px"
-            borderRadius={4}
-            _hover={{ bg: "gray.200" }}
-            cursor={"pointer"}
-            onClick={(e) => handlePostDelete(e, post._id)}
-          >
-            {loadingDelete ? (
-              <Spinner size="sm" />
-            ) : (
-              <>
-                <Icon as={AiOutlineDelete} mr={2} />
-                <Text fontSize={"9pt"}>Delete</Text>
-              </>
-            )}
-          </Flex>
+          {userProfileId === post.authorId && (
+            <Flex
+              align={"center"}
+              p="8px 10px"
+              borderRadius={4}
+              _hover={{ bg: "gray.200" }}
+              cursor={"pointer"}
+              onClick={(e) => handlePostDelete(e, post._id)}
+            >
+              {loadingDelete ? (
+                <Spinner size="sm" />
+              ) : (
+                <>
+                  <Icon as={AiOutlineDelete} mr={2} />
+                  <Text fontSize={"9pt"}>Delete</Text>
+                </>
+              )}
+            </Flex>
+          )}
           {/* )} */}
         </Flex>
       </Flex>
