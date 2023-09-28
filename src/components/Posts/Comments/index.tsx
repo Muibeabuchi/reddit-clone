@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import {
   Box,
+  Button,
   Flex,
   SkeletonCircle,
   SkeletonText,
@@ -9,9 +10,10 @@ import {
 } from "@chakra-ui/react";
 import CommentItem from "./CommentItem";
 import CommentInput from "./Input";
-import { useMutation, usePaginatedQuery } from "convex/react";
+import { useMutation, usePaginatedQuery, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
+import { useUser } from "@clerk/clerk-react";
 
 type CommentsProps = {
   postId: Id<"posts">;
@@ -20,6 +22,15 @@ type CommentsProps = {
 
 const Comments = ({ postId, communityName }: CommentsProps) => {
   const [postingComment, setPostingComment] = useState(false);
+  const [deletingComment, setDeletingComment] = useState<Id<"comments"> | null>(
+    null
+  );
+
+  const { user } = useUser();
+
+  const userProfileId = useQuery(api.profile.getUserProfile, {
+    userId: user?.id,
+  });
 
   // const userProfileId = useQuery(api.profile.getUserProfile, {
   //   userId: user?.id,
@@ -38,6 +49,7 @@ const Comments = ({ postId, communityName }: CommentsProps) => {
   console.log(postComments);
 
   const onCreateComment = useMutation(api.comments.createComment);
+  const onDeleteComment = useMutation(api.comments.deletecomment);
 
   async function createComment() {
     setPostingComment(true);
@@ -53,6 +65,20 @@ const Comments = ({ postId, communityName }: CommentsProps) => {
     }
 
     setPostingComment(false);
+  }
+
+  async function deleteComment(commentId: Id<"comments">) {
+    if (!userProfileId) return;
+    setDeletingComment(commentId);
+    try {
+      await onDeleteComment({
+        authorId: userProfileId,
+        commentId: commentId,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    setDeletingComment(null);
   }
 
   // console.log(postComments);
@@ -127,6 +153,8 @@ const Comments = ({ postId, communityName }: CommentsProps) => {
   //   setCommentCreateLoading(false);
   // };
 
+  console.log(status);
+
   return (
     <Box bg="white" p={2} borderRadius="0px 0px 4px 4px">
       <Flex
@@ -147,8 +175,10 @@ const Comments = ({ postId, communityName }: CommentsProps) => {
       <Stack
         spacing={6}
         p={2}
-        overflowY="auto"
-        maxHeight="300px"
+        paddingBottom={10}
+        // overflowY="auto"
+        // maxHeight="300px"
+        position="relative"
         sx={{
           "&::-webkit-scrollbar": {
             width: "10px",
@@ -177,11 +207,36 @@ const Comments = ({ postId, communityName }: CommentsProps) => {
                   <CommentItem
                     key={item._id}
                     comment={item}
-                    // onDeleteComment={onDeleteComment}
-                    // isLoading={deleteLoading === (item.id as string)}
-                    // userId={user?.id}
+                    onDeleteComment={deleteComment}
+                    userProfileId={userProfileId}
+                    isLoading={deletingComment === item._id}
                   />
                 ))}
+                {status !== "Exhausted" && (
+                  <Button
+                    disabled={status === "LoadingMore"}
+                    onClick={() => loadMore(10)}
+                    position="absolute"
+                    bottom="-1"
+                    marginX="auto"
+                    _disabled={{
+                      cursor: "not-allowed",
+                    }}
+                    paddingY="1"
+                    height={8}
+                    width={40}
+                    paddingX="8"
+                    // left="0"
+                    // right="0"
+                    alignSelf="center"
+                  >
+                    {status === "LoadingMore" ? (
+                      <LoadmoreSpinner />
+                    ) : (
+                      "Load More"
+                    )}
+                  </Button>
+                )}
               </>
             ) : (
               <Flex
@@ -204,3 +259,7 @@ const Comments = ({ postId, communityName }: CommentsProps) => {
   );
 };
 export default Comments;
+
+function LoadmoreSpinner() {
+  return <span className="loader"></span>;
+}

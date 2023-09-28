@@ -5,9 +5,11 @@ import RightContent from "./RightContent/RightContent";
 import Directory from "./Directory/Directory";
 import Communities from "./Directory/Communities";
 import useStoreUserEffect from "@/hooks/useStoreUser";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const userId = useStoreUserEffect();
+  const navigate = useNavigate();
   // console.log(userId);
   return (
     <Flex
@@ -20,6 +22,10 @@ export default function Navbar() {
         align="center"
         mr={{ base: 0, md: 2 }}
         width={{ base: "40px", md: "auto" }}
+        onClick={() => navigate("/")}
+        _hover={{
+          cursor: "pointer",
+        }}
       >
         <Image
           src="/images/redditFace.svg"

@@ -14,38 +14,25 @@ import {
   IoArrowDownCircleOutline,
   IoArrowUpCircleOutline,
 } from "react-icons/io5";
-import { Doc } from "convex/_generated/dataModel";
+import { Doc, Id } from "convex/_generated/dataModel";
+// import { useUser } from "@clerk/clerk-react";
+// import { api } from "../../../../convex/_generated/api";
+// import { useQuery } from "convex/react";
 
 type CommentItemProps = {
   comment: Doc<"comments">;
-  // onDeleteComment: (comment: Comment) => void;
-  // isLoading: boolean;
-  // userId?: string;
+  onDeleteComment: (commentId: Id<"comments">) => Promise<void>;
+  isLoading: boolean;
+  userProfileId: Id<"profile"> | null | undefined;
 };
 
 const CommentItem: React.FC<CommentItemProps> = ({
   comment,
-  // onDeleteComment,
-  // isLoading,
+  userProfileId,
+  onDeleteComment,
+  isLoading,
   // userId,
 }) => {
-  // const [loading, setLoading] = useState(false);
-
-  // const handleDelete = useCallback(async () => {
-  //   setLoading(true);
-  //   try {
-  //     const success = await onDeleteComment(comment);
-
-  //     if (!success) {
-  //       throw new Error("Error deleting comment");
-  //     }
-  //   } catch (error: any) {
-  //     console.log(error.message);
-  //     // setError
-  //     setLoading(false);
-  //   }
-  // }, [setLoading]);
-
   return (
     <Flex>
       <Box mr={2}>
@@ -64,7 +51,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
               {moment(new Date(comment._creationTime)).fromNow()}
             </Text>
           )}
-          {/* {isLoading && <Spinner size="sm" />} */}
+          {isLoading && <Spinner size="sm" />}
         </Stack>
         <Text fontSize="10pt">{comment.commentBody}</Text>
         <Stack
@@ -77,9 +64,9 @@ const CommentItem: React.FC<CommentItemProps> = ({
           <Icon as={IoArrowUpCircleOutline} />
           <Icon as={IoArrowDownCircleOutline} />
 
-          {/* pass a boolean from hok that sends the usersProfileId */}
+          {/* pass a boolean from hook that sends the usersProfileId */}
 
-          {/* {userId === comment.creatorId && (
+          {userProfileId === comment.authorId && (
             <>
               <Text fontSize="9pt" _hover={{ color: "blue.500" }}>
                 Edit
@@ -87,12 +74,12 @@ const CommentItem: React.FC<CommentItemProps> = ({
               <Text
                 fontSize="9pt"
                 _hover={{ color: "blue.500" }}
-                onClick={() => onDeleteComment(comment)}
+                onClick={() => onDeleteComment(comment._id)}
               >
                 Delete
               </Text>
             </>
-          )} */}
+          )}
         </Stack>
       </Stack>
     </Flex>
