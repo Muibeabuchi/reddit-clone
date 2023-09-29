@@ -17,6 +17,9 @@ export default function Communities() {
   if (!usersCommunities) return;
   console.log(usersCommunities);
 
+  // const isModerator =
+  console.log(user?.id);
+
   function handleClose() {
     setOpen(false);
   }
@@ -24,16 +27,24 @@ export default function Communities() {
   return (
     <>
       <CreateCommunityModal open={open} handleClose={handleClose} />
-      {usersCommunities?.find(
-        (item) =>
+      {usersCommunities?.find((item) => {
+        console.log(
           getUserIdFromIdentityIdentifier(item?.communityCreator) === user?.id
-      ) && (
+        );
+        return (
+          getUserIdFromIdentityIdentifier(item?.communityCreator) === user?.id
+        );
+      }) && (
         <Box mt={3} mb={4}>
           <Text pl={3} mb={1} fontSize="7pt" fontWeight={500} color="gray.500">
             MODERATING
           </Text>
           {usersCommunities
-            ?.filter((item) => item?.communityCreator)
+            ?.filter(
+              (item) =>
+                getUserIdFromIdentityIdentifier(item?.communityCreator) ===
+                user?.id
+            )
             .map((snippet) => (
               <MenuListItem
                 key={snippet?.communityId}
