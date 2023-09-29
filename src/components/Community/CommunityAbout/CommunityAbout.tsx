@@ -31,7 +31,7 @@ const CommunityAbout = ({ communityData }: Props) => {
         justify="space-between"
         align="center"
         color="white"
-        bg="blue.400"
+        bg="#32a86d"
         borderRadius={"4px 4px 0px 0px"}
         p={3}
       >

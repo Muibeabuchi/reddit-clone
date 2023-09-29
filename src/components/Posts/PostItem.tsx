@@ -156,7 +156,7 @@ Props) {
           color={
             user
               ? postVotes?.voteStatus === -1
-                ? "#4379ff"
+                ? "red.400"
                 : "gray.400"
               : "gray.400"
           }

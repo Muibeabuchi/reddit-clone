@@ -82,7 +82,7 @@ const CommunityAboutAdmin = ({ communityData }: Props) => {
             <Text fontWeight={700}>Admin</Text>
             <Flex align="center" justify="space-between">
               <Text
-                color="blue.500"
+                color="##0d7541"
                 cursor="pointer"
                 _hover={{ textDecoration: "underline" }}
                 onClick={() => selectedFileRef?.current?.click()}

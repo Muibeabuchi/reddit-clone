@@ -8,7 +8,7 @@ import { Input } from "./input";
 // 2. Extend the theme to include custom colors, fonts, etc
 const colors = {
   brand: {
-    100: "#ff3c00",
+    100: "#47cc8a",
   },
 };
 const styles = {

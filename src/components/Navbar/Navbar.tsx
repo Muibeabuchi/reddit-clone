@@ -39,7 +39,7 @@ export default function Navbar() {
           alt="navbar logo text"
         />
       </Flex>
-      <Directory>{<Communities />}</Directory>
+      <Directory />
       <SearchInput />
       <RightContent />
     </Flex>

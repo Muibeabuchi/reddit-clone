@@ -9,7 +9,7 @@ import { useUser } from "@clerk/clerk-react";
 import MenuListItem from "./MenuListItem";
 import { FaReddit } from "react-icons/fa";
 
-export default function Communities() {
+export default function Communities({ menuOpen }: { menuOpen: boolean }) {
   const { user } = useUser();
   const [open, setOpen] = useState(false);
   const usersCommunities = useQuery(api.community.getUserCommunities);
@@ -18,7 +18,7 @@ export default function Communities() {
   console.log(usersCommunities);
 
   // const isModerator =
-  console.log(user?.id);
+  // console.log(user?.id);
 
   function handleClose() {
     setOpen(false);

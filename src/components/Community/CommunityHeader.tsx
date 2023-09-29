@@ -29,7 +29,7 @@ const CommunityHeader: React.FC<CommunityHeaderProps> = ({
 
   return (
     <Flex direction={"column"} width={"100%"} height="146px">
-      <Box height="50%" width="100%" bg="blue.400"></Box>
+      <Box height="50%" width="100%" bg="#47cc8a"></Box>
       <Flex flexGrow={1} bg="white" justify="center">
         <Flex width={"95%"} maxW={"860px"}>
           {communityData?.communityImage ? (
@@ -51,7 +51,7 @@ const CommunityHeader: React.FC<CommunityHeaderProps> = ({
               borderRadius="50%"
               position="relative"
               top="-5px"
-              color="blue.400"
+              color="#47cc8a"
             />
           )}
           <Flex padding="10px 16px">

@@ -106,6 +106,10 @@ const CommentItem: React.FC<CommentItemProps> = ({
             //   color: "gray.700",
             // }}
             // maxHeight="fit-content"
+            // _focus={{
+            //   outline: "#47cc8a",
+            //   borderColor: "#47cc8a",
+            // }}
             overflowY="auto"
             css={{
               "&::-webkit-scrollbar": {
@@ -144,14 +148,14 @@ const CommentItem: React.FC<CommentItemProps> = ({
             <>
               <Text
                 fontSize="9pt"
-                _hover={{ color: "blue.500" }}
+                _hover={{ color: "#47cc8a" }}
                 onClick={handleEditable}
               >
                 {handleEditText()}
               </Text>
               <Text
                 fontSize="9pt"
-                _hover={{ color: "blue.500" }}
+                _hover={{ color: "#47cc8a" }}
                 onClick={() => onDeleteComment(comment._id)}
               >
                 Delete
