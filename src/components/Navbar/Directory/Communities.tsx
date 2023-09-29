@@ -52,6 +52,7 @@ export default function Communities() {
                 link={`/r/${snippet?.communityName}`}
                 icon={FaReddit}
                 iconColor="brand.100"
+                imageURL={snippet?.communityImage}
               />
             ))}
         </Box>
