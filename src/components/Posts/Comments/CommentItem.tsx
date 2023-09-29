@@ -1,12 +1,14 @@
-import React, { memo, useCallback, useState } from "react";
+import React, { memo, useState } from "react";
 import {
-  Avatar,
+  // Avatar,
   Box,
   Flex,
   Icon,
+  // Input,
   Spinner,
   Stack,
   Text,
+  Textarea,
 } from "@chakra-ui/react";
 import moment from "moment";
 import { FaReddit } from "react-icons/fa";
@@ -15,6 +17,8 @@ import {
   IoArrowUpCircleOutline,
 } from "react-icons/io5";
 import { Doc, Id } from "convex/_generated/dataModel";
+import { useMutation } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
 // import { useUser } from "@clerk/clerk-react";
 // import { api } from "../../../../convex/_generated/api";
 // import { useQuery } from "convex/react";
@@ -33,12 +37,50 @@ const CommentItem: React.FC<CommentItemProps> = ({
   isLoading,
   // userId,
 }) => {
+  const onEdit = useMutation(api.comments.editComment);
+  const [editable, setEditable] = useState(false);
+  const [edittedComment, setEdittedComment] = useState(comment.commentBody);
+
+  const hasEditted = edittedComment !== comment.commentBody;
+
+  function handleEditText() {
+    if (edittedComment.length < 1) {
+      return "Edit";
+    } else if (editable && hasEditted) {
+      return "Post";
+    } else if (editable && !hasEditted) {
+      return "unEdit";
+    } else if (!editable) {
+      return "Edit";
+    }
+  }
+
+  async function handleEditable() {
+    if (!editable) {
+      setEditable(true);
+    } else {
+      if (!hasEditted) {
+        setEditable(false);
+        return;
+      }
+      if (edittedComment.length < 1) {
+        setEditable(false);
+        setEdittedComment(comment.commentBody);
+        return;
+      }
+      await onEdit({
+        commentId: comment._id,
+        editedCommentBody: edittedComment,
+      });
+      setEditable(false);
+    }
+  }
   return (
     <Flex>
       <Box mr={2}>
         <Icon as={FaReddit} fontSize={30} color="gray.300" />
       </Box>
-      <Stack spacing={1}>
+      <Stack spacing={1} width={"100%"}>
         <Stack direction="row" align="center" spacing={2} fontSize="8pt">
           <Text
             fontWeight={700}
@@ -53,7 +95,39 @@ const CommentItem: React.FC<CommentItemProps> = ({
           )}
           {isLoading && <Spinner size="sm" />}
         </Stack>
-        <Text fontSize="10pt">{comment.commentBody}</Text>
+
+        {/* change the text to input based on a piece of state */}
+
+        {editable ? (
+          <Textarea
+            resize={"none"}
+            // disabled={true}
+            // _disabled={{
+            //   color: "gray.700",
+            // }}
+            // maxHeight="fit-content"
+            overflowY="auto"
+            css={{
+              "&::-webkit-scrollbar": {
+                width: "0px",
+              },
+              "&::-webkit-scrollbar-track": {
+                width: "0px",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                background: "transparent",
+                borderRadius: "0px",
+              },
+            }}
+            defaultValue={comment.commentBody}
+            value={edittedComment}
+            onChange={(e) => setEdittedComment(e.target.value)}
+            width={"100%"}
+          />
+        ) : (
+          <Text fontSize="10pt">{comment.commentBody}</Text>
+        )}
+
         <Stack
           direction="row"
           align="center"
@@ -68,8 +142,12 @@ const CommentItem: React.FC<CommentItemProps> = ({
 
           {userProfileId === comment.authorId && (
             <>
-              <Text fontSize="9pt" _hover={{ color: "blue.500" }}>
-                Edit
+              <Text
+                fontSize="9pt"
+                _hover={{ color: "blue.500" }}
+                onClick={handleEditable}
+              >
+                {handleEditText()}
               </Text>
               <Text
                 fontSize="9pt"
