@@ -5,16 +5,23 @@ import PostLoader from "./PostLoader";
 // import { Doc } from "convex/_generated/dataModel";
 import { CommunityPostsAndVotes } from "@/pages/communityPage";
 
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+
 // export type postsType =
-type PostsProps = {
-  communityPosts: CommunityPostsAndVotes[] | undefined;
-  // communityVotes: Doc<"votes">[];
-};
+// type PostsProps = {
+// communityPosts: CommunityPostsAndVotes[] | undefined;
+// communityVotes: Doc<"votes">[];
+// };
 
 const Posts = ({
-  communityPosts,
-}: // communityVotes,
-PostsProps): React.ReactNode => {
+  communityName,
+}: {
+  communityName: string;
+}): React.ReactNode => {
+  const communityPosts = useQuery(api.posts.getCommunityPosts, {
+    communityName,
+  });
   // const { postStateValue, setPostValue, onDeletePost, onSelectPost, onVote } =
   //   usePosts();communityPosts
 
@@ -22,7 +29,7 @@ PostsProps): React.ReactNode => {
   return (
     <>
       {communityPosts === undefined ? (
-        <PostLoader />
+        <PostLoader numberOfSkeletons={3} />
       ) : (
         <Stack spacing={2}>
           {communityPosts?.map((post) => (

@@ -43,18 +43,13 @@ const CommunityPage = () => {
   const communityPosts = useQuery(api.posts.getCommunityPosts, {
     communityName,
   });
-  const communityVotes = useQuery(api.votes.getCommunityVotes, {
-    communityName,
-  });
   const communityData = useQuery(api.community.getCommunityData, {
     communityName,
   });
 
-  console.log(communityVotes);
   console.log(communityPosts);
 
   if (!communityData) return;
-  if (!communityVotes) return;
 
   return (
     <>
@@ -66,7 +61,8 @@ const CommunityPage = () => {
         <>
           <CommunityCreatePostLink communityName={communityName} />
           <Posts
-            communityPosts={communityPosts}
+            communityName={communityName}
+            // communityPosts={communityPosts}
             // communityVotes={communityVotes}
           />
         </>

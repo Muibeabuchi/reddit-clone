@@ -42,7 +42,7 @@ const PostPage = () => {
       <>
         {post === undefined ? (
           // todo --- create a loader for single page post
-          <PostLoader />
+          <PostLoader numberOfSkeletons={1} />
         ) : (
           <>
             {/* {postStateValue.selectedPost && ( */}
