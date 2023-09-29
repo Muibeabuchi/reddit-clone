@@ -1,10 +1,11 @@
 // import { authModalState } from "@/atoms/AuthModalAtom";
+import useDirectory from "@/hooks/useDirectory";
 import { Flex, Icon, Input } from "@chakra-ui/react";
 import { useUser } from "@clerk/clerk-react";
 import { BsLink45Deg } from "react-icons/bs";
 import { FaReddit } from "react-icons/fa";
 import { IoImageOutline } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 // import { useSetRecoilState } from "recoil";
 
 type CommunityCreatePostLinkType = {
@@ -17,9 +18,19 @@ const CommunityCreatePostLink = ({
   const { user } = useUser();
   const navigate = useNavigate();
 
+  const { toggleMenuOpen } = useDirectory();
+
+  const location = useLocation();
+  const locationArray = location.pathname.split("/");
+  const ishomepage = !!locationArray[0];
+  // console.log(isSinglePage);
+
   const onClick = () => {
     if (!user) {
       return;
+    }
+    if (ishomepage) {
+      return toggleMenuOpen();
     }
     navigate(`/r/${communityName}/submit`);
   };
