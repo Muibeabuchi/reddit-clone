@@ -224,7 +224,7 @@ export const getUserCommunities = query({
     // check if user is authenticated
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
-      throw new Error("Called storeUser without authentication present");
+      return;
     }
     // get users tokenidentifier,which is same as profileId
     const { tokenIdentifier } = identity;
@@ -235,10 +235,7 @@ export const getUserCommunities = query({
       .withIndex("by_token", (q) => q.eq("tokenIdentifier", tokenIdentifier))
       .unique();
 
-    if (!profileId)
-      throw new Error(
-        "an error occured looking for profileId in profile table"
-      );
+    if (!profileId) return;
 
     const usersCommunities = profileId.communities;
 
