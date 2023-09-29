@@ -136,3 +136,44 @@ export const deletecomment = mutation({
     // todo ----  delete all votes associted with the comment
   },
 });
+
+export const editComment = mutation({
+  args: {
+    commentId: v.id("comments"),
+    editedCommentBody: v.string(),
+  },
+  handler: async (ctx, args) => {
+    // check if user is authenticated
+
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Called editComment without authentication present");
+    }
+    // get users tokenidentifier,which is same as profileId
+    const { tokenIdentifier } = identity;
+
+    // get id of user profile
+    const profileRef = await ctx.db
+      .query("profile")
+      .withIndex("by_token", (q) => q.eq("tokenIdentifier", tokenIdentifier))
+      .unique();
+
+    if (!profileRef)
+      throw new Error(
+        "an error occured looking for profileRef in profile table"
+      );
+
+    const commentRef = await ctx.db.get(args.commentId);
+
+    if (!commentRef) throw new Error("the comment does not exist");
+
+    const isAuthorOfComment = profileRef._id === commentRef.authorId;
+
+    if (!isAuthorOfComment)
+      throw new Error("this user is not the author of comment");
+
+    await ctx.db.patch(commentRef._id, {
+      commentBody: args.editedCommentBody,
+    });
+  },
+});
