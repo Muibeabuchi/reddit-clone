@@ -1,4 +1,5 @@
 // import { api } from "./_generated/api";
+import { Id } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
@@ -11,6 +12,13 @@ const createCommunityArgs = {
   ),
   creatorId: v.string(),
   communityImage: v.optional(v.string()),
+};
+
+type usersCommunitiesTypes = {
+  communityImage: string | undefined;
+  communityName: string;
+  communityCreator: string;
+  communityId: Id<"community">;
 };
 
 const getCommunityDataArgs = {
@@ -207,5 +215,77 @@ export const mutateCommunityImage = mutation({
     // delete the old communities photo from file storage
     if (communityRef?.communityImage === "") return;
     await ctx.storage.delete(communityRef.communityImage as string);
+  },
+});
+
+export const getUserCommunities = query({
+  args: {},
+  handler: async (ctx) => {
+    // check if user is authenticated
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Called storeUser without authentication present");
+    }
+    // get users tokenidentifier,which is same as profileId
+    const { tokenIdentifier } = identity;
+
+    // get id of user profile
+    const profileId = await ctx.db
+      .query("profile")
+      .withIndex("by_token", (q) => q.eq("tokenIdentifier", tokenIdentifier))
+      .unique();
+
+    if (!profileId)
+      throw new Error(
+        "an error occured looking for profileId in profile table"
+      );
+
+    const usersCommunities = profileId.communities;
+
+    // if (!usersCommunities) return;
+
+    const usersCommunitiesData = await Promise.all(
+      usersCommunities.map(async (community) => {
+        const communities = await ctx.db.get(community);
+
+        if (!communities?.communityImage)
+          return {
+            communityImage: "",
+            communityName: communities?.communityName,
+            communityCreator: communities?.creatorId,
+            communityId: communities?._id,
+          };
+
+        // if (communities?.communityImage !== ') {
+        const image = await ctx.storage.getUrl(communities?.communityImage);
+        // console.log(community, image);
+        // console.log();
+        // }
+        const communitiesData: usersCommunitiesTypes = {
+          communityImage: image ? image : "",
+          communityName: communities.communityName,
+          communityCreator: communities.creatorId,
+          communityId: communities._id,
+        };
+        return communitiesData;
+      })
+    );
+
+    // const usersCommunitiesDataAndImage = Promise.all(
+    //   usersCommunitiesData.map(async (community) => {
+    //     if (!community?.communityImage) return;
+    //     const image = await ctx.storage.getUrl(community?.communityImage);
+    //     if (!image) return;
+
+    //     const communitiesData: usersCommunitiesTypes = {
+    //       communityImage: communities.communityImage,
+    //       communityName: communities.communityName,
+    //       communityCreator: communities.creatorId,
+    //       communityId: communities._id,
+    //     };
+    //   })
+    // );
+
+    return usersCommunitiesData;
   },
 });

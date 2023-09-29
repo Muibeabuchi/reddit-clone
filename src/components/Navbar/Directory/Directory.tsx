@@ -1,6 +1,6 @@
 // import { ChevronDownIcon } from '@chakra-ui/icons'
 import { Flex, Icon, Menu, MenuButton, MenuList, Text } from "@chakra-ui/react";
-import { useUser } from "@clerk/clerk-react";
+// import { useUser } from "@clerk/clerk-react";
 import { ReactNode } from "react";
 // import {FaRedditSquare} from 'react-icons/fa'
 import { BiChevronDown } from "react-icons/bi";
