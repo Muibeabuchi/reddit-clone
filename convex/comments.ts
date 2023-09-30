@@ -10,9 +10,9 @@ export const getPostComments = query({
   handler: async (ctx, args) => {
     const postComment = await ctx.db
       .query("comments")
-      .filter((q) => q.eq(q.field("postId"), args.postId))
+      // .filter((q) => q.eq(q.field("postId"), args.postId))
+      .withIndex("by_postId", (q) => q.eq("postId", args.postId))
       .order("desc")
-      // .withIndex("by_postId", (q) => q.eq("postId", args.postId))
       .paginate(args.paginationOpts);
     return postComment;
   },

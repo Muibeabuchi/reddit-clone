@@ -115,3 +115,73 @@ export const voteOnPost = mutation({
     }
   },
 });
+
+export const voteOnComment = mutation({
+  args: {
+    commentId: v.id("comments"),
+    voteStatus: v.union(v.literal(1), v.literal(-1)),
+  },
+  handler: async (ctx, args) => {
+    // check if the person wanting to vote is authenticated
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Called storeUser without authentication present");
+    }
+    // get users tokenidentifier,which is same as profileId
+    const { tokenIdentifier } = identity;
+
+    // get the profileId of the authentucated user
+    const profileId = await ctx.db
+      .query("profile")
+      .withIndex("by_token", (q) => q.eq("tokenIdentifier", tokenIdentifier))
+      .unique();
+
+    if (!profileId)
+      throw new Error(
+        "an error occured looking for profileId in profile table"
+      );
+
+    // get the post that is being voted on
+    const commentToBeVotedOn = await ctx.db.get(args.commentId);
+    if (!commentToBeVotedOn)
+      throw new Error("The post to be voted on does not exist");
+
+    // check if the user has voted on this post before
+    const commentVoteRef = await ctx.db
+      .query("commentVotes")
+      .withIndex("by_commentId_AuthorId", (q) =>
+        q.eq("commentId", args.commentId).eq("voterId", profileId._id)
+      )
+      .unique();
+    // if the user have not voted on this post before then we create a new vote
+    if (!commentVoteRef) {
+      await ctx.db.patch(commentToBeVotedOn._id, {
+        numberOfVotes: commentToBeVotedOn.numberOfVotes + args.voteStatus,
+      });
+      return await ctx.db.insert("commentVotes", {
+        commentId: commentToBeVotedOn._id,
+        voterAuthToken: tokenIdentifier,
+        voterId: profileId._id,
+        voteStatus: args.voteStatus,
+      });
+    } else if (commentVoteRef) {
+      const isSameVoteStatus = args.voteStatus === commentVoteRef.voteStatus;
+      if (isSameVoteStatus) {
+        const negatedVoteStatus = args.voteStatus * -1;
+        await ctx.db.patch(commentToBeVotedOn._id, {
+          numberOfVotes: commentToBeVotedOn.numberOfVotes + negatedVoteStatus,
+        });
+        return await ctx.db.delete(commentVoteRef._id);
+      } else {
+        const doubledVoteStatus = args.voteStatus * 2;
+
+        await ctx.db.patch(commentToBeVotedOn._id, {
+          numberOfVotes: commentToBeVotedOn.numberOfVotes + doubledVoteStatus,
+        });
+        return await ctx.db.patch(commentVoteRef._id, {
+          voteStatus: args.voteStatus,
+        });
+      }
+    }
+  },
+});

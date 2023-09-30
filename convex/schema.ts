@@ -60,5 +60,8 @@ export default defineSchema({
     commentId: v.id("comments"),
     voterId: v.id("profile"),
     voteStatus: v.union(v.literal(1), v.literal(-1)),
-  }),
+    voterAuthToken: v.string(),
+  })
+    .index("by_commentId", ["commentId"])
+    .index("by_commentId_AuthorId", ["commentId", "voterId"]),
 });
