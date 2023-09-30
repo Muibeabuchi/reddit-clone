@@ -14,7 +14,23 @@ export const getPostComments = query({
       .withIndex("by_postId", (q) => q.eq("postId", args.postId))
       .order("desc")
       .paginate(args.paginationOpts);
-    return postComment;
+
+    // map through the comments and fetch their respective votes
+    const commentsWithVotes = Promise.all(
+      postComment.page.map(async (comment) => {
+        const votes = await ctx.db
+          .query("commentVotes")
+          .withIndex("by_commentId", (q) => q.eq("commentId", comment._id))
+          .collect();
+        const postCommentsWithVotes = {
+          ...comment,
+          votes: votes,
+        };
+        return postCommentsWithVotes;
+      })
+    );
+
+    return commentsWithVotes;
   },
 });
 
