@@ -78,7 +78,7 @@ export default function CreateCommunityModal({
 
     if (!user?.id) return;
     try {
-      const response = await mutateCommunity({
+      await mutateCommunity({
         communityName,
         communityType,
         creatorId: user?.id,
@@ -147,7 +147,9 @@ export default function CreateCommunityModal({
               >
                 {charsRemaining} characters remaining
               </Text>
-              <Text color="red">{error}</Text>
+              <Text color="red" fontSize={10}>
+                {error}
+              </Text>
               <Box mt={4} mb={4}>
                 <Text fontWeight={600} fontSize={15}>
                   Community Type
@@ -197,6 +199,7 @@ export default function CreateCommunityModal({
                     name="restricted"
                     isChecked={communityType === "restricted"}
                     onChange={handleCommunityTypeChange}
+                    // iconColor="red.300"
                   >
                     <Flex align={"center"}>
                       <Icon as={HiLockClosed} color="gray.500" pt={1} />
