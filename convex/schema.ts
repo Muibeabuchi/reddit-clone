@@ -56,4 +56,9 @@ export default defineSchema({
   })
     .index("by_postId", ["postId"])
     .index("by_communityName", ["communityName"]),
+  commentVotes: defineTable({
+    commentId: v.id("comments"),
+    voterId: v.id("profile"),
+    voteStatus: v.union(v.literal(1), v.literal(-1)),
+  }),
 });
