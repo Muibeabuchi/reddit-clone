@@ -145,11 +145,24 @@ export const deletecomment = mutation({
       numberOfComments: postRef.numberOfComments - 1,
     });
 
-    // delete the comment
-
-    await ctx.db.delete(commentRef._id);
-
     // todo ----  delete all votes associted with the comment
+    // delete all the votes on the comment
+    // fetch all the votes associated with a comment
+
+    const commentsVotes = await ctx.db
+      .query("commentVotes")
+      .withIndex("by_commentId", (q) => q.eq("commentId", commentRef._id))
+      .collect();
+
+    // map through the comments and delete the votes
+    Promise.all(
+      commentsVotes.map(async (vote) => {
+        await ctx.db.delete(vote._id);
+      })
+    );
+
+    // delete the comment
+    await ctx.db.delete(commentRef._id);
   },
 });
 
