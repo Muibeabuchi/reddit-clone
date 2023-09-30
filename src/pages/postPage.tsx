@@ -1,16 +1,3 @@
-// import React, { useEffect } from "react";
-// import { doc, getDoc } from "firebase/firestore";
-// import { useRouter } from "next/router";
-// import { useAuthState } from "react-firebase-hooks/auth";
-// import { Post } from "../../../../atoms/postsAtom";
-// import About from "../../../../components/Community/About";
-// import Comments from "../../../../components/Post/Comments";
-// import PostLoader from "../../../../components/Post/Loader";
-// import PostItem from "../../../../components/Post/PostItem";
-// import { auth, firestore } from "../../../../firebase/clientApp";
-// import useCommunityData from "../../../../hooks/useCommunityData";
-// import usePosts from "../../../../hooks/usePosts";
-
 import PageLayout from "@/layout/pageLayout";
 import { api } from "../../convex/_generated/api";
 import { useQuery } from "convex/react";

@@ -182,7 +182,7 @@ export const deleteCommunityPost = mutation({
     // todo ------ we also delete all comments on a post
 
     // if user is author of post, delete the post
-    const deletePost = await ctx.db.delete(args.postId);
+    await ctx.db.delete(args.postId);
   },
 });
 
