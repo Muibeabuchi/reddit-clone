@@ -16,19 +16,20 @@ export const getPostComments = query({
       .paginate(args.paginationOpts);
 
     // map through the comments and fetch their respective votes
-    // const commentsWithVotes = Promise.all(
-    //   postComment.page.map(async (comment) => {
-    //     const votes = await ctx.db
-    //       .query("commentVotes")
-    //       .withIndex("by_commentId", (q) => q.eq("commentId", comment._id))
-    //       .collect();
-    //     const postCommentsWithVotes = {
-    //       ...postComment,
-    //       votes: votes,
-    //     };
-    //     return postCommentsWithVotes;
-    //   })
-    // );
+    const commentsWithVotes = await Promise.all(
+      postComment.page.map(async (comment) => {
+        const votes = await ctx.db
+          .query("commentVotes")
+          .withIndex("by_commentId", (q) => q.eq("commentId", comment._id))
+          .collect();
+        return {
+          ...comment,
+          votes: votes,
+        };
+      })
+    );
+
+    postComment.page = commentsWithVotes;
 
     return postComment;
   },
