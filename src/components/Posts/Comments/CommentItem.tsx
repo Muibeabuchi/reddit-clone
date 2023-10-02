@@ -14,20 +14,32 @@ import moment from "moment";
 import { FaReddit } from "react-icons/fa";
 import {
   IoArrowDownCircleOutline,
+  IoArrowDownCircleSharp,
   IoArrowUpCircleOutline,
+  IoArrowUpCircleSharp,
 } from "react-icons/io5";
 import { Doc, Id } from "convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
+import { CommentWithVotesType } from "convex/comments";
+import { useUser } from "@clerk/clerk-react";
+// import { ReactMutation } from "convex/react";
+// import { FunctionReference } from "convex/server";
+import { getUserIdFromIdentityIdentifier } from "@/utils/helperFunctions";
 // import { useUser } from "@clerk/clerk-react";
 // import { api } from "../../../../convex/_generated/api";
 // import { useQuery } from "convex/react";
 
 type CommentItemProps = {
-  comment: Doc<"comments">;
+  comment: CommentWithVotesType;
   onDeleteComment: (commentId: Id<"comments">) => Promise<void>;
   isLoading: boolean;
   userProfileId: Id<"profile"> | null | undefined;
+  onVoteOnComment: (
+    e: React.MouseEvent<SVGElement, MouseEvent>,
+    commentId: Id<"comments">,
+    voteStatus: 1 | -1
+  ) => Promise<void>;
 };
 
 const CommentItem: React.FC<CommentItemProps> = ({
@@ -35,13 +47,21 @@ const CommentItem: React.FC<CommentItemProps> = ({
   userProfileId,
   onDeleteComment,
   isLoading,
+  onVoteOnComment,
   // userId,
 }) => {
+  const { user } = useUser();
   const onEdit = useMutation(api.comments.editComment);
   const [editable, setEditable] = useState(false);
   const [edittedComment, setEdittedComment] = useState(comment.commentBody);
 
   const hasEditted = edittedComment !== comment.commentBody;
+
+  const commentVotes = comment.votes.find(
+    (vote) => getUserIdFromIdentityIdentifier(vote.voterAuthToken) === user?.id
+  );
+
+  // comment.votes.
 
   function handleEditText() {
     if (edittedComment.length < 1) {
@@ -139,8 +159,47 @@ const CommentItem: React.FC<CommentItemProps> = ({
           fontWeight={600}
           color="gray.500"
         >
-          <Icon as={IoArrowUpCircleOutline} />
-          <Icon as={IoArrowDownCircleOutline} />
+          {/* <Icon as={IoArrowUpCircleOutline} /> */}
+          <Icon
+            as={
+              user
+                ? commentVotes?.voteStatus === 1
+                  ? IoArrowUpCircleSharp
+                  : IoArrowUpCircleOutline
+                : IoArrowUpCircleOutline
+            }
+            color={
+              user
+                ? commentVotes?.voteStatus === 1
+                  ? "brand.100"
+                  : "gray.400"
+                : "gray.400"
+            }
+            fontSize={18}
+            onClick={(e) => onVoteOnComment(e, comment._id, 1)}
+            cursor={"pointer"}
+          />
+          <Text fontSize={12}>{comment.numberOfVotes}</Text>
+          {/* <Icon as={IoArrowDownCircleOutline} /> */}
+          <Icon
+            as={
+              user
+                ? commentVotes?.voteStatus === -1
+                  ? IoArrowDownCircleSharp
+                  : IoArrowDownCircleOutline
+                : IoArrowDownCircleOutline
+            }
+            color={
+              user
+                ? commentVotes?.voteStatus === -1
+                  ? "red.400"
+                  : "gray.400"
+                : "gray.400"
+            }
+            fontSize={18}
+            onClick={(e) => onVoteOnComment(e, comment._id, -1)}
+            cursor={"pointer"}
+          />
 
           {/* pass a boolean from hook that sends the usersProfileId */}
 

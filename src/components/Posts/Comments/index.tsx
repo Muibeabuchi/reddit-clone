@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -14,6 +14,7 @@ import { useMutation, usePaginatedQuery, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { useUser } from "@clerk/clerk-react";
+import { CommentWithVotesType } from "convex/comments";
 
 type CommentsProps = {
   postId: Id<"posts">;
@@ -153,6 +154,19 @@ const Comments = ({ postId, communityName }: CommentsProps) => {
   //   setCommentCreateLoading(false);
   // };
 
+  const mutateCommentWithVote = useMutation(api.votes.voteOnComment);
+
+  async function onVoteOnComment(
+    e: React.MouseEvent<SVGElement, MouseEvent>,
+    commentId: Id<"comments">,
+    voteStatus: 1 | -1
+  ) {
+    await mutateCommentWithVote({
+      commentId,
+      voteStatus,
+    });
+  }
+
   console.log(status);
 
   return (
@@ -210,6 +224,7 @@ const Comments = ({ postId, communityName }: CommentsProps) => {
                     onDeleteComment={deleteComment}
                     userProfileId={userProfileId}
                     isLoading={deletingComment === item._id}
+                    onVoteOnComment={onVoteOnComment}
                   />
                 ))}
                 {status !== "Exhausted" && (

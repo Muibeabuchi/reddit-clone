@@ -1,6 +1,27 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { paginationOptsValidator } from "convex/server";
+import { Id } from "./_generated/dataModel";
+
+export type CommentWithVotesType = {
+  votes: {
+    _id: Id<"commentVotes">;
+    _creationTime: number;
+    voterId: Id<"profile">;
+    voteStatus: 1 | -1;
+    commentId: Id<"comments">;
+    voterAuthToken: string;
+  }[];
+  _id: Id<"comments">;
+  _creationTime: number;
+  communityName: string;
+  authorId: Id<"profile">;
+  authorName: string;
+  communityId: Id<"community">;
+  numberOfVotes: number;
+  postId: Id<"posts">;
+  commentBody: string;
+};
 
 export const getPostComments = query({
   args: {
@@ -25,13 +46,19 @@ export const getPostComments = query({
         return {
           ...comment,
           votes: votes,
-        };
+        } as CommentWithVotesType;
+        // as CommentWithVotesType;
       })
     );
 
-    postComment.page = commentsWithVotes;
+    // postComment.page = commentsWithVotes;
 
-    return postComment;
+    return {
+      ...postComment,
+      page: commentsWithVotes,
+    };
+
+    // return postComment; //? not typed to include the votes property
   },
 });
 
