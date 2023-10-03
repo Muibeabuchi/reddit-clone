@@ -2,72 +2,48 @@ import {
   Box,
   Button,
   Flex,
-  Icon,
-  Image,
+  // Icon,
+  // Image,
   Skeleton,
   SkeletonCircle,
   Stack,
-  Text,
+  // Text,
 } from "@chakra-ui/react";
 import { api } from "../../convex/_generated/api";
 import { useQuery } from "convex/react";
-// import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
-// import Link from "next/link";
 // import React, { useEffect, useState } from "react";
-import { FaReddit } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { useUser } from "@clerk/clerk-react";
-import { useMemo } from "react";
-import { getUserIdFromIdentityIdentifier } from "@/utils/helperFunctions";
-// import { Community } from "../../atoms/communitiesAtom";
-// import { firestore } from "../../firebase/clientApp";
-// import useCommunityData from "../../hooks/useCommunityData";
+// import { FaReddit } from "react-icons/fa";
+// import { Link } from "react-router-dom";
+// import { useUser } from "@clerk/clerk-react";
+// import { useMemo } from "react";
+// import { getUserIdFromIdentityIdentifier } from "@/utils/helperFunctions";
+
+// import { useMutation } from "convex/react";
+// import useJoinOrLeaveCommunity from "@/hooks/useJoinOrLeaveCommunity";
+import RecommendedCommunityItem from "./RecommendedCommunityItem";
 
 // type RecommendationsProps = {};
 
 const Recommendations = () => {
   const topCommunities = useQuery(api.community.getCommunityRecommendations);
-  const { user } = useUser();
 
-  const isJoined = useMemo(
-    () =>
-      topCommunities?.find((item) => {
-        const communityMembers = item.communityMembers;
-        return communityMembers.find(
-          (item) => getUserIdFromIdentityIdentifier(item) === user?.id
-        );
-      }),
-    [user?.id, topCommunities]
-  );
-  // const [communities, setCommunities] = useState<Community[]>([]);
-  // const [loading, setLoading] = useState(false);
-  // const { communityStateValue, onJoinLeaveCommunity } = useCommunityData();
+  // console.log(topCommunities);
+  // const { user } = useUser();
+  // const { onJoinOrLeaveCommunity } = useJoinOrLeaveCommunity();
 
-  // const getCommunityRecommendations = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const communityQuery = query(
-  //       collection(firestore, "communities"),
-  //       orderBy("numberOfMembers", "desc"),
-  //       limit(5)
+  // const isJoined =
+  //   // useMemo(
+  //   //   () =>
+  //   topCommunities?.find((item) => {
+  //     const communityMembers = item.communityMembers;
+  //     return !!communityMembers.find(
+  //       (item) => getUserIdFromIdentityIdentifier(item) === user?.id
   //     );
-  //     const communityDocs = await getDocs(communityQuery);
-  //     const communities = communityDocs.docs.map((doc) => ({
-  //       id: doc.id,
-  //       ...doc.data(),
-  //     })) as Community[];
-  //     console.log("HERE ARE COMS", communities);
+  //   });
+  //   [user?.id, topCommunities]
+  // );
 
-  //     setCommunities(communities);
-  //   } catch (error: any) {
-  //     console.log("getCommunityRecommendations error", error.message);
-  //   }
-  //   setLoading(false);
-  // };
-
-  // useEffect(() => {
-  //   getCommunityRecommendations();
-  // }, []);
+  // const joinOrLeaveCommunity = useMutation(api.community.joinOrLeaveCommunity);
 
   return (
     <Flex
@@ -113,60 +89,11 @@ const Recommendations = () => {
           <>
             {topCommunities.map((item, index) => {
               return (
-                <Link key={item._id} to={`/r/${item.communityName}`}>
-                  <Flex
-                    position="relative"
-                    align="center"
-                    fontSize="10pt"
-                    borderBottom="1px solid"
-                    borderColor="gray.200"
-                    p="10px 12px"
-                    fontWeight={600}
-                  >
-                    <Flex width="80%" align="center">
-                      <Flex width="15%">
-                        <Text mr={2}>{index + 1}</Text>
-                      </Flex>
-                      <Flex align="center" width="80%">
-                        {item.communityImage ? (
-                          <Image
-                            borderRadius="full"
-                            boxSize="28px"
-                            src={item.communityImage}
-                            mr={2}
-                          />
-                        ) : (
-                          <Icon
-                            as={FaReddit}
-                            fontSize={30}
-                            color="brand.100"
-                            mr={2}
-                          />
-                        )}
-                        <span
-                          style={{
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                          }}
-                        >{`r/${item.communityName}`}</span>
-                      </Flex>
-                    </Flex>
-                    <Box position="absolute" right="10px">
-                      <Button
-                        height="22px"
-                        fontSize="8pt"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          // onJoinLeaveCommunity(item, isJoined);
-                        }}
-                        variant={isJoined ? "outline" : "solid"}
-                      >
-                        {isJoined ? "Joined" : "Join"}
-                      </Button>
-                    </Box>
-                  </Flex>
-                </Link>
+                <RecommendedCommunityItem
+                  item={item}
+                  index={index}
+                  key={item._id}
+                />
               );
             })}
             <Box p="10px 20px">
