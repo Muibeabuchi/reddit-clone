@@ -8,10 +8,15 @@ import { getUserIdFromIdentityIdentifier } from "@/utils/helperFunctions";
 import { useUser } from "@clerk/clerk-react";
 import MenuListItem from "./MenuListItem";
 import { FaReddit } from "react-icons/fa";
+import { useRecoilState } from "recoil";
+import { createCommunityModal } from "@/atoms/createCommuityModal";
 
 export default function Communities({ menuOpen }: { menuOpen: boolean }) {
   const { user } = useUser();
-  const [open, setOpen] = useState(false);
+
+  const [communityModal, setCommunityModal] =
+    useRecoilState(createCommunityModal);
+  // const [open, setOpen] = useState(false);
   const usersCommunities = useQuery(api.community.getUserCommunities);
 
   if (!usersCommunities) return;
@@ -21,12 +26,12 @@ export default function Communities({ menuOpen }: { menuOpen: boolean }) {
   // console.log(user?.id);
 
   function handleClose() {
-    setOpen(false);
+    setCommunityModal(false);
   }
 
   return (
     <>
-      <CreateCommunityModal open={open} handleClose={handleClose} />
+      <CreateCommunityModal open={communityModal} handleClose={handleClose} />
       {usersCommunities?.find((item) => {
         console.log(
           getUserIdFromIdentityIdentifier(item?.communityCreator) === user?.id
@@ -65,7 +70,7 @@ export default function Communities({ menuOpen }: { menuOpen: boolean }) {
           width="100%"
           fontSize="10pt"
           _hover={{ bg: "gray.100" }}
-          onClick={() => setOpen(true)}
+          onClick={() => setCommunityModal(true)}
         >
           <Flex alignItems="center">
             <Icon fontSize={20} mr={2} as={GrAdd} />

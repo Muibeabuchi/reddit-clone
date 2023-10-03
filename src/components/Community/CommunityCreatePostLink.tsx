@@ -9,7 +9,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 // import { useSetRecoilState } from "recoil";
 
 type CommunityCreatePostLinkType = {
-  communityName: string;
+  communityName?: string;
 };
 
 const CommunityCreatePostLink = ({
@@ -21,18 +21,20 @@ const CommunityCreatePostLink = ({
   const { toggleMenuOpen } = useDirectory();
 
   const location = useLocation();
-  const locationArray = location.pathname.split("/");
-  const ishomepage = !!locationArray[0];
-  // console.log(isSinglePage);
+  // const locationArray = location.pathname.split("/");
+  // const ishomepage = !!locationArray[0];
+  console.log(location);
 
   const onClick = () => {
     if (!user) {
       return;
     }
-    if (ishomepage) {
+    if (location.pathname === "/") {
       return toggleMenuOpen();
     }
-    navigate(`/r/${communityName}/submit`);
+    if (communityName) {
+      navigate(`/r/${communityName}/submit`);
+    }
   };
 
   return (
