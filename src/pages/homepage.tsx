@@ -1,6 +1,7 @@
 import CommunityCreatePostLink from "@/components/Community/CommunityCreatePostLink";
 import PersonalHome from "@/components/Community/PersonalHome";
 import Premium from "@/components/Community/Premium";
+import Recommendations from "@/components/Recommendations";
 import PageLayout from "@/layout/pageLayout";
 import { Stack } from "@chakra-ui/react";
 

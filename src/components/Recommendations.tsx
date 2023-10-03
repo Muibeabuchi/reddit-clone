@@ -9,46 +9,47 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
+// import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
+// import Link from "next/link";
+// import React, { useEffect, useState } from "react";
 import { FaReddit } from "react-icons/fa";
-import { Community } from "../../atoms/communitiesAtom";
-import { firestore } from "../../firebase/clientApp";
-import useCommunityData from "../../hooks/useCommunityData";
+import { Link } from "react-router-dom";
+// import { Community } from "../../atoms/communitiesAtom";
+// import { firestore } from "../../firebase/clientApp";
+// import useCommunityData from "../../hooks/useCommunityData";
 
-type RecommendationsProps = {};
+// type RecommendationsProps = {};
 
-const Recommendations: React.FC<RecommendationsProps> = () => {
-  const [communities, setCommunities] = useState<Community[]>([]);
-  const [loading, setLoading] = useState(false);
-  const { communityStateValue, onJoinLeaveCommunity } = useCommunityData();
+const Recommendations = () => {
+  // const [communities, setCommunities] = useState<Community[]>([]);
+  // const [loading, setLoading] = useState(false);
+  // const { communityStateValue, onJoinLeaveCommunity } = useCommunityData();
 
-  const getCommunityRecommendations = async () => {
-    setLoading(true);
-    try {
-      const communityQuery = query(
-        collection(firestore, "communities"),
-        orderBy("numberOfMembers", "desc"),
-        limit(5)
-      );
-      const communityDocs = await getDocs(communityQuery);
-      const communities = communityDocs.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Community[];
-      console.log("HERE ARE COMS", communities);
+  // const getCommunityRecommendations = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const communityQuery = query(
+  //       collection(firestore, "communities"),
+  //       orderBy("numberOfMembers", "desc"),
+  //       limit(5)
+  //     );
+  //     const communityDocs = await getDocs(communityQuery);
+  //     const communities = communityDocs.docs.map((doc) => ({
+  //       id: doc.id,
+  //       ...doc.data(),
+  //     })) as Community[];
+  //     console.log("HERE ARE COMS", communities);
 
-      setCommunities(communities);
-    } catch (error: any) {
-      console.log("getCommunityRecommendations error", error.message);
-    }
-    setLoading(false);
-  };
+  //     setCommunities(communities);
+  //   } catch (error: any) {
+  //     console.log("getCommunityRecommendations error", error.message);
+  //   }
+  //   setLoading(false);
+  // };
 
-  useEffect(() => {
-    getCommunityRecommendations();
-  }, []);
+  // useEffect(() => {
+  //   getCommunityRecommendations();
+  // }, []);
 
   return (
     <Flex
@@ -97,7 +98,7 @@ const Recommendations: React.FC<RecommendationsProps> = () => {
                 (snippet) => snippet.communityId === item.id
               );
               return (
-                <Link key={item.id} href={`/r/${item.id}`}>
+                <Link key={item.id} to={`/r/${item.id}`}>
                   <Flex
                     position="relative"
                     align="center"
@@ -140,11 +141,11 @@ const Recommendations: React.FC<RecommendationsProps> = () => {
                       <Button
                         height="22px"
                         fontSize="8pt"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          onJoinLeaveCommunity(item, isJoined);
-                        }}
-                        variant={isJoined ? "outline" : "solid"}
+                        // onClick={(event) => {
+                        //   event.stopPropagation();
+                        //   onJoinLeaveCommunity(item, isJoined);
+                        // }}
+                        // variant={isJoined ? "outline" : "solid"}
                       >
                         {isJoined ? "Joined" : "Join"}
                       </Button>
