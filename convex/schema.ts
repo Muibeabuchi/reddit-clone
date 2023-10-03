@@ -12,7 +12,9 @@ export default defineSchema({
     ),
     communityMembers: v.array(v.string()),
     communityImage: v.optional(v.string()),
-  }).index("by_communityName", ["communityName"]),
+  })
+    .index("by_communityName", ["communityName"])
+    .index("by_communityMembers", ["communityMembers"]),
   profile: defineTable({
     tokenIdentifier: v.string(),
     profileName: v.string(),

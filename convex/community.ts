@@ -286,3 +286,16 @@ export const getUserCommunities = query({
     return usersCommunitiesData;
   },
 });
+
+export const getCommunityRecommendations = query({
+  args: {},
+  handler: async (ctx) => {
+    // query the communities database and pick the first 5 communities with the largest number of members
+    const top5Communities = await ctx.db
+      .query("community")
+      .withIndex("by_communityMembers", (q) => q)
+      .order("desc")
+      .take(5);
+    return top5Communities;
+  },
+});
