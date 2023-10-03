@@ -11,7 +11,7 @@ export default defineSchema({
       v.literal("restricted")
     ),
     communityMembers: v.array(v.string()),
-    communityImage: v.optional(v.string()),
+    communityImage: v.string(),
   })
     .index("by_communityName", ["communityName"])
     .index("by_communityMembers", ["communityMembers"]),

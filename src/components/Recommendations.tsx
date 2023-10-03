@@ -9,11 +9,16 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import { api } from "../../convex/_generated/api";
+import { useQuery } from "convex/react";
 // import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
 // import Link from "next/link";
 // import React, { useEffect, useState } from "react";
 import { FaReddit } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useUser } from "@clerk/clerk-react";
+import { useMemo } from "react";
+import { getUserIdFromIdentityIdentifier } from "@/utils/helperFunctions";
 // import { Community } from "../../atoms/communitiesAtom";
 // import { firestore } from "../../firebase/clientApp";
 // import useCommunityData from "../../hooks/useCommunityData";
@@ -21,6 +26,19 @@ import { Link } from "react-router-dom";
 // type RecommendationsProps = {};
 
 const Recommendations = () => {
+  const topCommunities = useQuery(api.community.getCommunityRecommendations);
+  const { user } = useUser();
+
+  const isJoined = useMemo(
+    () =>
+      topCommunities?.find((item) => {
+        const communityMembers = item.communityMembers;
+        return communityMembers.find(
+          (item) => getUserIdFromIdentityIdentifier(item) === user?.id
+        );
+      }),
+    [user?.id, topCommunities]
+  );
   // const [communities, setCommunities] = useState<Community[]>([]);
   // const [loading, setLoading] = useState(false);
   // const { communityStateValue, onJoinLeaveCommunity } = useCommunityData();
@@ -70,13 +88,13 @@ const Recommendations = () => {
         fontWeight={600}
         bgImage="url(/images/recCommsArt.png)"
         backgroundSize="cover"
-        bgGradient="linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75)),
-        url('images/recCommsArt.png')"
+        // bgGradient="linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75)),
+        // url('images/recCommsArt.png')"
       >
         Top Communities
       </Flex>
       <Flex direction="column">
-        {loading ? (
+        {topCommunities === undefined ? (
           <Stack mt={2} p={3}>
             <Flex justify="space-between" align="center">
               <SkeletonCircle size="10" />
@@ -93,12 +111,9 @@ const Recommendations = () => {
           </Stack>
         ) : (
           <>
-            {communities.map((item, index) => {
-              const isJoined = !!communityStateValue.mySnippets.find(
-                (snippet) => snippet.communityId === item.id
-              );
+            {topCommunities.map((item, index) => {
               return (
-                <Link key={item.id} to={`/r/${item.id}`}>
+                <Link key={item._id} to={`/r/${item.communityName}`}>
                   <Flex
                     position="relative"
                     align="center"
@@ -113,11 +128,11 @@ const Recommendations = () => {
                         <Text mr={2}>{index + 1}</Text>
                       </Flex>
                       <Flex align="center" width="80%">
-                        {item.imageURL ? (
+                        {item.communityImage ? (
                           <Image
                             borderRadius="full"
                             boxSize="28px"
-                            src={item.imageURL}
+                            src={item.communityImage}
                             mr={2}
                           />
                         ) : (
@@ -134,18 +149,18 @@ const Recommendations = () => {
                             overflow: "hidden",
                             textOverflow: "ellipsis",
                           }}
-                        >{`r/${item.id}`}</span>
+                        >{`r/${item.communityName}`}</span>
                       </Flex>
                     </Flex>
                     <Box position="absolute" right="10px">
                       <Button
                         height="22px"
                         fontSize="8pt"
-                        // onClick={(event) => {
-                        //   event.stopPropagation();
-                        //   onJoinLeaveCommunity(item, isJoined);
-                        // }}
-                        // variant={isJoined ? "outline" : "solid"}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          // onJoinLeaveCommunity(item, isJoined);
+                        }}
+                        variant={isJoined ? "outline" : "solid"}
                       >
                         {isJoined ? "Joined" : "Join"}
                       </Button>

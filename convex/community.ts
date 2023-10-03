@@ -296,6 +296,18 @@ export const getCommunityRecommendations = query({
       .withIndex("by_communityMembers", (q) => q)
       .order("desc")
       .take(5);
-    return top5Communities;
+    const topCommunitiesWithCommunityImage = Promise.all(
+      top5Communities.map(async (item) => {
+        if (!item.communityImage) {
+          return item;
+        }
+        const communityImage = await ctx.storage.getUrl(item.communityImage);
+        return {
+          ...item,
+          communityImage: communityImage,
+        };
+      })
+    );
+    return topCommunitiesWithCommunityImage;
   },
 });

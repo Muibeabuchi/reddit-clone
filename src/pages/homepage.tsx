@@ -35,7 +35,7 @@ export default function Homepage() {
         )} */}
       </>
       <Stack spacing={5} position="sticky" top="14px">
-        {/* <Recommendations /> */}
+        <Recommendations />
         <Premium />
         <PersonalHome />
       </Stack>
