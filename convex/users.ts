@@ -38,7 +38,7 @@ export const store = mutation({
     return await ctx.db.insert("profile", {
       profileName: identity.name!,
       tokenIdentifier: identity.tokenIdentifier,
-      communities: [],
+      // communities: [],
       userEmail: identity.email,
       userProfilePic: identity.pictureUrl || "",
       //   profileId: identity.issuer,

@@ -10,7 +10,8 @@ export default defineSchema({
       v.literal("public"),
       v.literal("restricted")
     ),
-    communityMembers: v.array(v.string()),
+
+    communityMembers: v.number(),
     communityImage: v.string(),
   })
     .index("by_communityName", ["communityName"])
@@ -24,7 +25,7 @@ export default defineSchema({
     profileName: v.string(),
     userEmail: v.optional(v.string()),
     userProfilePic: v.optional(v.string()),
-    communities: v.array(v.id("community")),
+    // communities: v.array(v.id("community")),
   }).index("by_token", ["tokenIdentifier"]),
   posts: defineTable({
     authorId: v.id("profile"), // use the users profile convex id ----ensures direct querying of the users data
@@ -70,4 +71,13 @@ export default defineSchema({
   })
     .index("by_commentId", ["commentId"])
     .index("by_commentId_AuthorId", ["commentId", "voterId"]),
+  usersCommunities: defineTable({
+    communityName: v.string(),
+    communityId: v.id("community"),
+    profileId: v.id("profile"),
+    userAuthToken: v.string(),
+  })
+    .index("by_community", ["communityId"])
+    .index("by_profile", ["profileId"])
+    .index("by_community_Profile", ["communityId", "profileId"]),
 });

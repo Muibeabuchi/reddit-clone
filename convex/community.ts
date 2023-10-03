@@ -60,18 +60,26 @@ export const createCommunity = mutation({
       return "an error occured looking for profileId in profile table";
 
     const communityId = await ctx.db.insert("community", {
-      communityMembers: [tokenIdentifier],
+      // communityMembers: [tokenIdentifier],
       communityName: args.communityName,
       communityType: args.communityType,
       creatorId: tokenIdentifier,
       communityImage: "",
+      communityMembers: 1,
+    });
+    // create new document on the usersCommunities table
+    await ctx.db.insert("usersCommunities", {
+      communityId,
+      communityName: args.communityName,
+      profileId: profileId._id,
+      userAuthToken: tokenIdentifier,
     });
 
-    // patch not add
+    // // patch not add
 
-    await ctx.db.patch(profileId._id, {
-      communities: [...profileId.communities, communityId],
-    });
+    // await ctx.db.patch(profileId._id, {
+    //   communities: [...profileId.communities, communityId],
+    // });
 
     return communityId;
   },
@@ -124,6 +132,8 @@ export const joinOrLeaveCommunity = mutation({
 
     if (!UserProfile) return;
 
+    // check if the user has joined this particular community
+
     // get the community that we wanna join
     const community = await ctx.db
       .query("community")
@@ -131,43 +141,71 @@ export const joinOrLeaveCommunity = mutation({
         q.eq("communityName", args.communityName)
       )
       .unique();
-    const communityMembers = community?.communityMembers;
+    if (!community) throw new Error("the community does not exist");
 
-    const usersCommunities = UserProfile?.communities;
-    console.log(usersCommunities);
+    const hasUserJoinedCommunity = await ctx.db
+      .query("usersCommunities")
+      .withIndex("by_community_Profile", (q) =>
+        q.eq("communityId", community?._id).eq("profileId", UserProfile._id)
+      )
+      .unique();
 
-    const isMemberOfCommunity = !!usersCommunities?.find(
-      (item) => item === community?._id
-    );
+    // const communityMembers = community?.communityMembers;
 
-    const filteredUserCommunities = usersCommunities.filter(
-      (c) => c !== community?._id
-    );
+    // const usersCommunities = UserProfile?.communities;
+    // console.log(usersCommunities);
 
-    if (isMemberOfCommunity) {
+    // const isMemberOfCommunity = !!usersCommunities?.find(
+    //   (item) => item === community?._id
+    // );
+
+    // const filteredUserCommunities = usersCommunities.filter(
+    //   (c) => c !== community?._id
+    // );
+
+    if (hasUserJoinedCommunity) {
       if (!community?._id) return;
 
       console.log("removing communityid from users community");
       // if user is member of community remove communityId from the users communities
-      await ctx.db.patch(UserProfile?._id, {
-        communities: [...filteredUserCommunities],
-      });
+      // await ctx.db.patch(UserProfile?._id, {
+      //   communities: [...filteredUserCommunities],
+      // });
       // if user is member of community remove userId from the community members
-      await ctx.db.patch(community?._id, {
-        communityMembers: communityMembers?.filter(
-          (c) => c !== identity.tokenIdentifier
-        ),
+      // await ctx.db.patch(community?._id, {
+      //   communityMembers: communityMembers?.filter(
+      //     (c) => c !== identity.tokenIdentifier
+      //   ),
+      // });
+
+      // if user is member of the community delete the document
+      await ctx.db.patch(hasUserJoinedCommunity.communityId, {
+        communityMembers: community.communityMembers - 1,
       });
+      await ctx.db.delete(hasUserJoinedCommunity._id);
       return "user has been successfully removed from community";
-    } else if (!isMemberOfCommunity) {
+    } else if (!hasUserJoinedCommunity) {
       if (!community) return;
-      if (!communityMembers) return;
+      // if (!communityMembers) return;
       // if user is not member of community add communityId from the users communities
-      await ctx.db.patch(UserProfile?._id, {
-        communities: [...usersCommunities, community?._id],
+      // await ctx.db.patch(UserProfile?._id, {
+      //   communities: [...usersCommunities, community?._id],
+      // });
+      // await ctx.db.patch(community?._id, {
+      //   communityMembers: [...communityMembers, identity.tokenIdentifier],
+      // });
+
+      // if user is not a member of that community, add a document to the table
+
+      await ctx.db.patch(community._id, {
+        communityMembers: community.communityMembers + 1,
       });
-      await ctx.db.patch(community?._id, {
-        communityMembers: [...communityMembers, identity.tokenIdentifier],
+
+      await ctx.db.insert("usersCommunities", {
+        communityId: community._id,
+        communityName: community.communityName,
+        profileId: UserProfile._id,
+        userAuthToken: identity.tokenIdentifier,
       });
       return "user has been successfully been added to the community";
     }
@@ -237,13 +275,20 @@ export const getUserCommunities = query({
 
     if (!profileId) return;
 
-    const usersCommunities = profileId.communities;
+    // const usersCommunities = profileId.communities;
+
+    // quwery the usersCommunities table and find all documents where the userId is same as profileId._id
+
+    const usersCommunities = await ctx.db
+      .query("usersCommunities")
+      .withIndex("by_profile", (q) => q.eq("profileId", profileId._id))
+      .collect();
 
     // if (!usersCommunities) return;
 
     const usersCommunitiesData = await Promise.all(
       usersCommunities.map(async (community) => {
-        const communities = await ctx.db.get(community);
+        const communities = await ctx.db.get(community.communityId);
 
         if (!communities?.communityImage)
           return {
@@ -291,9 +336,10 @@ export const getCommunityRecommendations = query({
   args: {},
   handler: async (ctx) => {
     // query the communities database and pick the first 5 communities with the largest number of members
+    // todo---- properly fetch the top 5 communities
     const top5Communities = await ctx.db
       .query("community")
-      .withIndex("by_communityMembers", (q) => q)
+      .withIndex("by_communityMembers")
       .order("desc")
       .take(5);
     const topCommunitiesWithCommunityImage = Promise.all(
