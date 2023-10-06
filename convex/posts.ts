@@ -223,3 +223,49 @@ export const getSinglePost = query({
     return singlePostWithVotes;
   },
 });
+
+export const getHomepageFeedUnauthenticated = query({
+  args: {
+    paginationOpts: paginationOptsValidator,
+
+    userAuthToken: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    // check if ghe passed argument belongs to any user in the profile table
+    // fetch data for all latest posts
+
+    const latestPosts = await ctx.db
+      .query("posts")
+      .order("desc")
+      // .filter((q) => q.gt(q.field("_creationTime"), Date.now() - 1200))
+      .paginate(args.paginationOpts);
+
+    // get the imageurl of each post
+    const communityPostWithImages = await Promise.all(
+      latestPosts.page.map(async (post) => {
+        const postImage = post.postImageId
+          ? await ctx.storage.getUrl(post.postImageId)
+          : "";
+        return { ...post, postImageId: postImage ? postImage : "" };
+      })
+    );
+
+    const communityPostWithImagesAndVotes = await Promise.all(
+      communityPostWithImages.map(async (post) => {
+        const postVotes = await ctx.db
+          .query("votes")
+          .withIndex("by_PostIndex", (q) => q.eq("postId", post._id))
+          .collect();
+
+        return {
+          ...post,
+          postVotes,
+        };
+      })
+    );
+
+    // fetch data for all trending posts---posts with high number of votes
+
+    return { ...latestPosts, page: communityPostWithImagesAndVotes };
+  },
+});
