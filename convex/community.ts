@@ -150,6 +150,11 @@ export const joinOrLeaveCommunity = mutation({
       )
       .unique();
 
+    // lets check if the user is the creator of the community
+    const isCreatorOfCommunity =
+      community.creatorId === identity.tokenIdentifier;
+    if (isCreatorOfCommunity) return;
+
     // const communityMembers = community?.communityMembers;
 
     // const usersCommunities = UserProfile?.communities;

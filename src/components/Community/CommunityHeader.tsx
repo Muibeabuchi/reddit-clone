@@ -9,7 +9,8 @@ import { Doc } from "convex/_generated/dataModel";
 import React, { useState } from "react";
 import { FaReddit } from "react-icons/fa";
 import { api } from "../../../convex/_generated/api";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
+import useJoinOrLeaveCommunity from "@/hooks/useJoinOrLeaveCommunity";
 
 type CommunityHeaderProps = {
   communityData: Doc<"community">;
@@ -21,11 +22,16 @@ const CommunityHeader: React.FC<CommunityHeaderProps> = ({
 }) => {
   const { user } = useUser();
   // console.log(user);
-  const joinOrLeaveCommunity = useMutation(api.community.joinOrLeaveCommunity);
+  // const joinOrLeaveCommunity = useMutation(api.community.joinOrLeaveCommunity);
+  const { onJoinOrLeaveCommunity, loading } = useJoinOrLeaveCommunity();
   const isCommunityCreator =
     getUserIdFromIdentityIdentifier(communityData.creatorId) === user?.id;
   // console.log("is community creator", isCommunityCreator);
-  const isJoined = isUserMemberOfCommunity(communityData, user?.id);
+  // const userProfileId = useQuery(api.profile.getUserProfile,{userId: user?.id})
+  // const isJoined = isUserMemberOfCommunity(communityData, user?.id);
+  const isJoined = useQuery(api.usersCommunities.isMemberOfCommunity, {
+    communityId: communityData._id,
+  });
 
   return (
     <Flex direction={"column"} width={"100%"} height="146px">
@@ -69,8 +75,8 @@ const CommunityHeader: React.FC<CommunityHeaderProps> = ({
                 height={"30px"}
                 pr={6}
                 pl={6}
-                // isLoading={loading}
-                onClick={() => joinOrLeaveCommunity({ communityName })}
+                isLoading={loading}
+                onClick={() => onJoinOrLeaveCommunity(communityName)}
               >
                 {isJoined ? "Joined" : "Join"}
               </Button>

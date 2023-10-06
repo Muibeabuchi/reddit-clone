@@ -19,6 +19,7 @@ import type * as community from "../community";
 import type * as posts from "../posts";
 import type * as profile from "../profile";
 import type * as users from "../users";
+import type * as usersCommunities from "../usersCommunities";
 import type * as votes from "../votes";
 
 /**
@@ -35,6 +36,7 @@ declare const fullApi: ApiFromModules<{
   posts: typeof posts;
   profile: typeof profile;
   users: typeof users;
+  usersCommunities: typeof usersCommunities;
   votes: typeof votes;
 }>;
 export declare const api: FilterApi<

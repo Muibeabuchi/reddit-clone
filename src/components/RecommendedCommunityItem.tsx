@@ -2,7 +2,9 @@ import useJoinOrLeaveCommunity from "@/hooks/useJoinOrLeaveCommunity";
 import { getUserIdFromIdentityIdentifier } from "@/utils/helperFunctions";
 import { Flex, Icon, Button, Box, Image, Text } from "@chakra-ui/react";
 import { useUser } from "@clerk/clerk-react";
+import { api } from "../../convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
+import { useQuery } from "convex/react";
 // import { Box } from "framer-motion";
 import React, { useMemo } from "react";
 import { FaReddit } from "react-icons/fa";
@@ -28,13 +30,17 @@ export default function RecommendedCommunityItem({
   const { user } = useUser();
   const { onJoinOrLeaveCommunity, loading } = useJoinOrLeaveCommunity();
 
-  const isJoined =
-    //    useMemo(() => {
+  const isJoined = useQuery(api.usersCommunities.isMemberOfCommunity, {
+    communityId: item._id,
+  });
 
-    !!item?.communityMembers.find(
-      (item) => getUserIdFromIdentityIdentifier(item) === user?.id
-    );
-  //   }, [user?.id, item.communityMembers]);
+  // const isJoined =
+  //   //    useMemo(() => {
+
+  //   !!item?.communityMembers.find(
+  //     (item) => getUserIdFromIdentityIdentifier(item) === user?.id
+  //   );
+  // //   }, [user?.id, item.communityMembers]);
   console.log(isJoined);
   return (
     <Box key={item._id}>

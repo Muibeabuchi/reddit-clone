@@ -44,7 +44,7 @@ const CommunityAbout = ({ communityData }: Props) => {
         <Stack>
           <Flex width={"100%"} p={2} fontSize="10pt" fontWeight={700}>
             <Flex direction="column" flexGrow={1}>
-              <Text>{communityData.communityMembers.length}</Text>
+              <Text>{communityData.communityMembers}</Text>
               <Text>Members</Text>
             </Flex>
             <Flex direction="column" flexGrow={1}>
