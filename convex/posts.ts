@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { paginationOptsValidator } from "convex/server";
 
 const createPostArgs = {
   // get the posters profile id and name on the server
@@ -65,7 +66,10 @@ export const createPost = mutation({
 });
 
 export const getCommunityPosts = query({
-  args: { communityName: v.string() },
+  args: {
+    paginationOpts: paginationOptsValidator,
+    communityName: v.string(),
+  },
   handler: async (ctx, args) => {
     // grab the community id using the name
     const communityRef = await ctx.db
@@ -81,11 +85,11 @@ export const getCommunityPosts = query({
       .query("posts")
       .withIndex("by_communityId", (q) => q.eq("communityId", communityRef._id))
       .order("desc")
-      .take(10);
+      .paginate(args.paginationOpts);
 
     // get the imageurl of each post
-    const communityPostWithImages = Promise.all(
-      communityPosts.map(async (post) => {
+    const communityPostWithImages = await Promise.all(
+      communityPosts.page.map(async (post) => {
         const postImage = post.postImageId
           ? await ctx.storage.getUrl(post.postImageId)
           : "";
@@ -93,8 +97,8 @@ export const getCommunityPosts = query({
       })
     );
 
-    const communityPostWithImagesAndVotes = Promise.all(
-      (await communityPostWithImages).map(async (post) => {
+    const communityPostWithImagesAndVotes = await Promise.all(
+      communityPostWithImages.map(async (post) => {
         const postVotes = await ctx.db
           .query("votes")
           .withIndex("by_PostIndex", (q) => q.eq("postId", post._id))
@@ -133,7 +137,10 @@ export const getCommunityPosts = query({
     //   })
     // );
 
-    return communityPostWithImagesAndVotes;
+    return {
+      ...communityPosts,
+      page: communityPostWithImagesAndVotes,
+    };
   },
 });
 

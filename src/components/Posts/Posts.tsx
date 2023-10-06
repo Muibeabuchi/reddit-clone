@@ -3,9 +3,9 @@ import PostItem from "./PostItem";
 import { Stack } from "@chakra-ui/react";
 import PostLoader from "./PostLoader";
 // import { Doc } from "convex/_generated/dataModel";
-import { CommunityPostsAndVotes } from "@/pages/communityPage";
+// import { CommunityPostsAndVotes } from "@/pages/communityPage";
 
-import { useQuery } from "convex/react";
+import { usePaginatedQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 
 // export type postsType =
@@ -19,20 +19,26 @@ const Posts = ({
 }: {
   communityName: string;
 }): React.ReactNode => {
-  const communityPosts = useQuery(api.posts.getCommunityPosts, {
-    communityName,
-  });
+  const { isLoading, loadMore, results, status } = usePaginatedQuery(
+    api.posts.getCommunityPosts,
+    {
+      communityName,
+    },
+    {
+      initialNumItems: 10,
+    }
+  );
   // const { postStateValue, setPostValue, onDeletePost, onSelectPost, onVote } =
   //   usePosts();communityPosts
 
   // if (communityPosts === undefined) return <PostLoader />;
   return (
     <>
-      {communityPosts === undefined ? (
+      {results === undefined ? (
         <PostLoader numberOfSkeletons={3} />
       ) : (
         <Stack spacing={2}>
-          {communityPosts?.map((post) => (
+          {results?.map((post) => (
             <PostItem
               key={post._id}
               // onDeletePost={onDeletePost}

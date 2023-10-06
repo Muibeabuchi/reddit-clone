@@ -40,14 +40,14 @@ const CommunityPage = () => {
   const params = useParams();
   const communityName = params.communityName!;
 
-  const communityPosts = useQuery(api.posts.getCommunityPosts, {
-    communityName,
-  });
+  // const communityPosts = useQuery(api.posts.getCommunityPosts, {
+  //   communityName,
+  // });
   const communityData = useQuery(api.community.getCommunityData, {
     communityName,
   });
 
-  console.log(communityPosts);
+  // console.log(communityPosts);
 
   if (!communityData) return;
 
