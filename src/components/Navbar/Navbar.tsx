@@ -28,7 +28,7 @@ export default function Navbar() {
         }}
       >
         <Image
-          src="/images/redditFace.svg"
+          src="/images/icons8-reddit-ios-16-glyph-96.png"
           height="30px"
           alt="navbar logo image"
         />

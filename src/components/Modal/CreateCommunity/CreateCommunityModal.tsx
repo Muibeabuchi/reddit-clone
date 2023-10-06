@@ -66,7 +66,7 @@ export default function CreateCommunityModal({
     // validate the community name
     // console.log("starting creating community");
     setError("");
-    const format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+    const format = new RegExp(" \\b[a-zA-Z]{3,21}\\b");
     if (format.test(communityName) || communityName.length < 3) {
       setError(
         "Community names must between 3-21 characters,and can only contain letters,numbers or underscores"

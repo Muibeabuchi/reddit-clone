@@ -16,6 +16,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/open-sans": "^5.0.12",
+    "@uidotdev/usehooks": "^2.3.1",
     "convex": "^1.1.1",
     "framer-motion": "^10.16.4",
     "moment": "^2.29.4",

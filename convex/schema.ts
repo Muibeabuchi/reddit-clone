@@ -14,7 +14,11 @@ export default defineSchema({
     communityImage: v.string(),
   })
     .index("by_communityName", ["communityName"])
-    .index("by_communityMembers", ["communityMembers"]),
+    .index("by_communityMembers", ["communityMembers"])
+    .searchIndex("search_communityName", {
+      searchField: "communityName",
+      // filterFields: ['']
+    }),
   profile: defineTable({
     tokenIdentifier: v.string(),
     profileName: v.string(),

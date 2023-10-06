@@ -311,3 +311,28 @@ export const getCommunityRecommendations = query({
     return topCommunitiesWithCommunityImage;
   },
 });
+
+export const searchedCommunities = query({
+  args: { searchTerm: v.string() },
+  handler: async (ctx, args) => {
+    const searchedCommunities = await ctx.db
+      .query("community")
+      .withSearchIndex("search_communityName", (q) =>
+        q.search("communityName", args.searchTerm)
+      )
+      .take(5);
+
+    const searchedCommunitiesWithImages = Promise.all(
+      searchedCommunities.map(async (item) => {
+        if (item.communityImage === "") return item;
+        const image = await ctx.storage.getUrl(item.communityImage);
+        return {
+          ...item,
+          communityImage: image,
+        };
+      })
+    );
+
+    return searchedCommunitiesWithImages;
+  },
+});
