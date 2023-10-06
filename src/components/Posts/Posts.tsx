@@ -8,6 +8,7 @@ import PostLoader from "./PostLoader";
 import { usePaginatedQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 
+import PaginatedFeed from "../InfiniteScroll/PaginatedFeed";
 // export type postsType =
 // type PostsProps = {
 // communityPosts: CommunityPostsAndVotes[] | undefined;
@@ -31,24 +32,32 @@ const Posts = ({
   // const { postStateValue, setPostValue, onDeletePost, onSelectPost, onVote } =
   //   usePosts();communityPosts
 
-  // if (communityPosts === undefined) return <PostLoader />;
+  const data = results?.map((post) => (
+    <PostItem
+      key={post._id}
+      // onDeletePost={onDeletePost}
+      // onSelectPost={onSelectPost}
+      // onVote={onVote}
+      post={post}
+      // votes={communityVotes.find((c) => c.postId === post._id)}
+      // userIsCreator={user?.uid === post.creatorId}
+    />
+  ));
+
+  if (status === "LoadingFirstPage")
+    return <PostLoader numberOfSkeletons={3} />;
   return (
     <>
       {results === undefined ? (
         <PostLoader numberOfSkeletons={3} />
       ) : (
         <Stack spacing={2}>
-          {results?.map((post) => (
-            <PostItem
-              key={post._id}
-              // onDeletePost={onDeletePost}
-              // onSelectPost={onSelectPost}
-              // onVote={onVote}
-              post={post}
-              // votes={communityVotes.find((c) => c.postId === post._id)}
-              // userIsCreator={user?.uid === post.creatorId}
-            />
-          ))}
+          <PaginatedFeed
+            data={data}
+            hasMore={status === "CanLoadMore"}
+            fetchData={() => loadMore(5)}
+            // scrollableTarget="scrollableContainer"
+          />
         </Stack>
       )}
     </>
