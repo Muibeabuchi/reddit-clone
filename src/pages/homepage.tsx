@@ -6,6 +6,8 @@ import PageLayout from "@/layout/pageLayout";
 import { Stack } from "@chakra-ui/react";
 
 export default function Homepage() {
+  // fetch the paginated data
+
   return (
     <PageLayout>
       <>
