@@ -14,6 +14,7 @@ import React, { useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import {
   BsChat,
+  BsDot,
   // BsDot
 } from "react-icons/bs";
 // import { FaReddit } from "react-icons/fa";
@@ -26,13 +27,14 @@ import {
   IoArrowDownCircleSharp,
   IoBookmarkOutline,
 } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useUser } from "@clerk/clerk-react";
 // import { getUserIdFromIdentityIdentifier } from "@/utils/helperFunctions";
 import useDeletePost from "@/hooks/useDeletePost";
 import { CommunityPostsAndVotes } from "@/pages/communityPage";
+import { FaReddit } from "react-icons/fa";
 
 type Props = {
   post: CommunityPostsAndVotes;
@@ -52,6 +54,9 @@ function PostItem({
 // onVote,
 Props) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const homepage = location.pathname === "/";
+  // console.log(homepage);
   const voteMutation = useMutation(api.votes.voteOnPost);
   const { user } = useUser();
 
@@ -174,6 +179,28 @@ Props) {
             fontSize={"9pt"}
           >
             {/* home page check */}
+            {homepage && (
+              <>
+                {post.communityImageUrl ? (
+                  <Image
+                    borderRadius="full"
+                    boxSize="18px"
+                    src={post.communityImageUrl}
+                    mr={2}
+                  />
+                ) : (
+                  <Icon as={FaReddit} fontSize={18} mr={1} color="#47cc8a" />
+                )}
+                <Link to={`r/${post.communityName}`}>
+                  <Text
+                    fontWeight={700}
+                    _hover={{ textDecoration: "underline" }}
+                    onClick={(event) => event.stopPropagation()}
+                  >{`r/${post.communityName}`}</Text>
+                </Link>
+                <Icon as={BsDot} color="#47cc8a" fontSize={8} />
+              </>
+            )}
             <Text mr={3}> Posted by u/{post.authorName} </Text>
             <Text>{moment(new Date(post._creationTime)).fromNow()}</Text>
           </Stack>
