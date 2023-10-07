@@ -4,74 +4,32 @@ import Premium from "@/components/Community/Premium";
 import Recommendations from "@/components/Recommendations";
 import PageLayout from "@/layout/pageLayout";
 import { Stack } from "@chakra-ui/react";
-import { api } from "../../convex/_generated/api";
-import { usePaginatedQuery } from "convex/react";
-import { useUser } from "@clerk/clerk-react";
-import PostLoader from "@/components/Posts/PostLoader";
-import PostItem from "@/components/Posts/PostItem";
-import PaginatedFeed from "@/components/InfiniteScroll/PaginatedFeed";
+// import { api } from "../../convex/_generated/api";
+import {
+  AuthLoading,
+  Authenticated,
+  Unauthenticated,
+  // usePaginatedQuery,
+} from "convex/react";
+// import { useUser } from "@clerk/clerk-react";
+// import PostLoader from "@/components/Posts/PostLoader";
+// import PostItem from "@/components/Posts/PostItem";
+// import PaginatedFeed from "@/components/InfiniteScroll/PaginatedFeed";
+import HomeFeed from "@/components/Feed/HomeFeed";
 
 export default function Homepage() {
-  const { user } = useUser();
   // fetch the paginated data
-
-  const { results, loadMore, isLoading, status } = usePaginatedQuery(
-    api.posts.getHomepageFeedUnauthenticated,
-    {
-      userAuthToken: user?.id,
-    },
-    {
-      initialNumItems: 15,
-    }
-  );
-
-  console.log("homepage posts", results);
-  console.log(status);
-
-  const data = results?.map((post) => (
-    <PostItem
-      key={post._id}
-      // onDeletePost={onDeletePost}
-      // onSelectPost={onSelectPost}
-      // onVote={onVote}
-      post={post}
-      // votes={communityVotes.find((c) => c.postId === post._id)}
-      // userIsCreator={user?.uid === post.creatorId}
-    />
-  ));
 
   return (
     <PageLayout>
       <>
         <CommunityCreatePostLink />
-        {status === "LoadingFirstPage" ? (
-          <PostLoader numberOfSkeletons={3} />
-        ) : (
-          <Stack
-          // id="lala"
-          // overflowY="auto"
-          // maxH="650px"
-          // css={{
-          //   "&::-webkit-scrollbar": {
-          //     width: "0px",
-          //   },
-          //   "&::-webkit-scrollbar-track": {
-          //     width: "0px",
-          //   },
-          //   "&::-webkit-scrollbar-thumb": {
-          //     background: "transparent",
-          //     borderRadius: "0px",
-          //   },
-          // }}
-          >
-            <PaginatedFeed
-              data={data}
-              hasMore={status === "CanLoadMore"}
-              fetchData={() => loadMore(10)}
-              // scrollableTarget="lala"
-            />
-          </Stack>
-        )}
+        <Unauthenticated>
+          <HomeFeed />
+        </Unauthenticated>
+        <Authenticated>we are authenticated</Authenticated>
+        {/* todo ------ add a custom banner or component that lets the user knows we are authenticating them */}
+        <AuthLoading>Loading the Auth</AuthLoading>
       </>
       <Stack spacing={5} position="sticky" top="14px">
         <Recommendations />

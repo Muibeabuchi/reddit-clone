@@ -22,6 +22,7 @@ Props) {
       // height={scrollableTarget}
       // scrollableTarget={scrollableTarget}
       hasMore={hasMore}
+      // todo ---- add a propoer loader to aler users when we are fetching more posts
       loader={<h4>Loading...</h4>}
       style={{
         display: "flex",
