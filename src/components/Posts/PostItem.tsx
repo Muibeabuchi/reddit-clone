@@ -112,6 +112,12 @@ Props) {
     }
   }
 
+  function handleNavigate(
+    e: React.MouseEvent<HTMLParagraphElement, MouseEvent>
+  ) {
+    e.stopPropagation();
+    navigate(`/r/${post.communityName}`);
+  }
   return (
     <Flex
       border="1px solid"
@@ -191,13 +197,13 @@ Props) {
                 ) : (
                   <Icon as={FaReddit} fontSize={18} mr={1} color="#47cc8a" />
                 )}
-                <Link to={`r/${post.communityName}`}>
-                  <Text
-                    fontWeight={700}
-                    _hover={{ textDecoration: "underline" }}
-                    onClick={(event) => event.stopPropagation()}
-                  >{`r/${post.communityName}`}</Text>
-                </Link>
+                {/* <Link to={`r/${post.communityName}`}> */}
+                <Text
+                  fontWeight={700}
+                  _hover={{ textDecoration: "underline" }}
+                  onClick={handleNavigate}
+                >{`r/${post.communityName}`}</Text>
+                {/* </Link> */}
                 <Icon as={BsDot} color="#47cc8a" fontSize={8} />
               </>
             )}

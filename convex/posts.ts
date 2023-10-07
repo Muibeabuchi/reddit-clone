@@ -269,3 +269,86 @@ export const getHomepageFeedUnauthenticated = query({
     return { ...latestPosts, page: communityPostWithImagesAndVotes };
   },
 });
+
+export const getUsersFeed = query({
+  args: {
+    // paginationOpts: paginationOptsValidator,
+  },
+  handler: async (ctx) => {
+    // get the users authentication token
+
+    // check if user is authenticated
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Called storeUser without authentication present");
+    }
+    // get users tokenidentifier,which is same as profileId
+    const { tokenIdentifier } = identity;
+
+    // get id of user profile
+    const profileId = await ctx.db
+      .query("profile")
+      .withIndex("by_token", (q) => q.eq("tokenIdentifier", tokenIdentifier))
+      .unique();
+
+    if (!profileId)
+      throw new Error(
+        "an error occured looking for profileId in profile table"
+      );
+
+    // use the profile id to query for all communities the user is in
+    const usersCommunities = await ctx.db
+      .query("usersCommunities")
+      .withIndex("by_profile", (q) => q.eq("profileId", profileId._id))
+      .collect();
+
+    const usersCommunities1 = usersCommunities.map((item) => item.communityId);
+
+    const usersPosts = await Promise.all(
+      usersCommunities1.map(async (communityId) => {
+        // for each id we fetch 5 posts from that community
+        const posts = await ctx.db
+          .query("posts")
+          .withIndex("by_communityId", (q) => q.eq("communityId", communityId))
+          .take(5);
+        // fetxh the images for those posts
+        const communityPostWithImages = await Promise.all(
+          posts.map(async (post) => {
+            const postImage = post.postImageId
+              ? await ctx.storage.getUrl(post.postImageId)
+              : "";
+            return { ...post, postImageId: postImage ? postImage : "" };
+          })
+        );
+        // fetch the votes for those posts
+        const communityPostWithImagesAndVotes = await Promise.all(
+          communityPostWithImages.map(async (post) => {
+            const postVotes = await ctx.db
+              .query("votes")
+              .withIndex("by_PostIndex", (q) => q.eq("postId", post._id))
+              .collect();
+
+            return {
+              ...post,
+              postVotes,
+            };
+          })
+        );
+
+        return communityPostWithImagesAndVotes;
+      })
+    );
+
+    return usersPosts.flat();
+  },
+});
+
+// Promise.all(
+//   [1, 2, 3, 4].map((item) => {
+//     const posts = await ctx.db
+//       .query("posts")
+//       .withIndex("by_communityId", (q) => q.eq("communityId", item.communityId))
+//       .take(5);
+//     return posts;
+//   })
+// );

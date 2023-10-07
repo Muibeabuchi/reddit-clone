@@ -16,6 +16,7 @@ import {
 // import PostItem from "@/components/Posts/PostItem";
 // import PaginatedFeed from "@/components/InfiniteScroll/PaginatedFeed";
 import HomeFeed from "@/components/Feed/HomeFeed";
+import UsersFeed from "@/components/Feed/UsersFeed";
 
 export default function Homepage() {
   // fetch the paginated data
@@ -27,7 +28,9 @@ export default function Homepage() {
         <Unauthenticated>
           <HomeFeed />
         </Unauthenticated>
-        <Authenticated>we are authenticated</Authenticated>
+        <Authenticated>
+          <UsersFeed />
+        </Authenticated>
         {/* todo ------ add a custom banner or component that lets the user knows we are authenticating them */}
         <AuthLoading>Loading the Auth</AuthLoading>
       </>
