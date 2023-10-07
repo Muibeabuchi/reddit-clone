@@ -7,7 +7,7 @@ const PostLoader = ({ numberOfSkeletons }: { numberOfSkeletons: number }) => {
     id: index,
   }));
 
-  console.log(arr1);
+  // console.log(arr1);w
   return (
     <Stack spacing={6}>
       {arr1.map((item) => {

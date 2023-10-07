@@ -15,7 +15,7 @@ export default function useDeletePost() {
   const location = useLocation();
   const x = location.pathname.split("/");
   const isSinglePage = !!x[3];
-  console.log(isSinglePage);
+  // console.log(isSinglePage);
 
   const navigate = useNavigate();
 
@@ -36,7 +36,7 @@ export default function useDeletePost() {
     } catch (error: {
       message: string;
     }) {
-      console.log(error);
+      // console.log(error);
       toast({
         title: "Unauthorized action, can't delete this post",
         // description: errorMessages[error.message],

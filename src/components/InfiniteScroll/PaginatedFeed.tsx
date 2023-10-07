@@ -6,22 +6,28 @@ type Props = {
   fetchData: () => void;
   hasMore: boolean;
   data: JSX.Element[];
-  //   scrollableTarget?: string;
+  // scrollableTarget?: string;
 };
 
 export default function PaginatedFeed({
   data,
   fetchData,
   hasMore,
-}: //   scrollableTarget,
+}: // scrollableTarget,
 Props) {
   return (
     <InfiniteScroll
       dataLength={data.length} //This is important field to render the next data
       next={fetchData}
-      //   height={scrollableTarget}
+      // height={scrollableTarget}
+      // scrollableTarget={scrollableTarget}
       hasMore={hasMore}
       loader={<h4>Loading...</h4>}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "6px",
+      }}
       //   endMessage={
       //     <p style={{ textAlign: "center" }}>
       //       <b>Yay! You have seen it all</b>

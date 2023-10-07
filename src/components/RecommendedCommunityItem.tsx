@@ -41,7 +41,7 @@ export default function RecommendedCommunityItem({
   //     (item) => getUserIdFromIdentityIdentifier(item) === user?.id
   //   );
   // //   }, [user?.id, item.communityMembers]);
-  console.log(isJoined);
+  // console.log(isJoined);
   return (
     <Box key={item._id}>
       <Flex

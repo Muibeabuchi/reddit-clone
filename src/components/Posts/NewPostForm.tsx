@@ -71,7 +71,7 @@ const NewPostForm: React.FunctionComponent<IAppProps> = ({ communityName }) => {
 
   async function handleCreatePost() {
     if (!textInputs.title) return;
-    console.log("creating the post");
+    // console.log("creating the post");
     if (!communityName) return;
     setLoading(true);
 
@@ -90,7 +90,7 @@ const NewPostForm: React.FunctionComponent<IAppProps> = ({ communityName }) => {
       });
       navigate(`/r/${communityName}`);
     } catch (error) {
-      console.log("creating post error", error);
+      // console.log("creating post error", error);ww
       // setError(true);
     } finally {
       setLoading(false);

@@ -7,7 +7,7 @@ export default function useCreatePostImage() {
 
   const [postImage, setPostImage] = useState<File | null>(null);
 
-  console.log(postImage);
+  // console.log(postImage);
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleCreatePostImage() {
@@ -29,7 +29,7 @@ export default function useCreatePostImage() {
       return storageId as string;
       setPostImage(null);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     } finally {
       setIsLoading(false);
     }

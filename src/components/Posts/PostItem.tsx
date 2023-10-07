@@ -67,7 +67,7 @@ Props) {
   //   (vote) => vote.voterId === userProfileId
   // );
   // if (!post) return;
-  console.log(post);
+  // console.log(post);
   // console.log(userProfileId);
 
   // const userIsCreator =
@@ -98,10 +98,10 @@ Props) {
         voteStatus,
         postId: post._id,
       });
-      console.log("voting completeted");
+      // console.log("voting completeted");
     } catch (error) {
       setMutationError(error);
-      console.log("voting error", error);
+      // console.log("voting error", error);
     } finally {
       setLoadingVote(false);
     }

@@ -233,11 +233,11 @@ export const getHomepageFeedUnauthenticated = query({
   handler: async (ctx, args) => {
     // check if ghe passed argument belongs to any user in the profile table
     // fetch data for all latest posts
-
+    const cutoff = Date.now() - 2 * 60 * 1000;
     const latestPosts = await ctx.db
       .query("posts")
-      .order("desc")
-      // .filter((q) => q.gt(q.field("_creationTime"), Date.now() - 1200))
+      .withIndex("by_creation_time", (q) => q.lt("_creationTime", cutoff))
+      // .order("desc")
       .paginate(args.paginationOpts);
 
     // get the imageurl of each post

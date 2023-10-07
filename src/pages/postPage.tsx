@@ -22,7 +22,7 @@ const PostPage = () => {
   });
 
   if (!communityData) return;
-  console.log(post?.postVotes);
+  // console.log(post?.postVotes);
   return (
     <PageLayout>
       {/* Left Content */}

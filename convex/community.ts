@@ -171,7 +171,7 @@ export const joinOrLeaveCommunity = mutation({
     if (hasUserJoinedCommunity) {
       if (!community?._id) return;
 
-      console.log("removing communityid from users community");
+      // console.log("removing communityid from users community");
       // if user is member of community remove communityId from the users communities
       // await ctx.db.patch(UserProfile?._id, {
       //   communities: [...filteredUserCommunities],

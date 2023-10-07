@@ -67,7 +67,7 @@ const CommunityAboutAdmin = ({ communityData }: Props) => {
       setSelectedFile("");
       setImage(null);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     } finally {
       setUploadingImage(false);
     }

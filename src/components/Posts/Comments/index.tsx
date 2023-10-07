@@ -47,7 +47,7 @@ const Comments = ({ postId, communityName }: CommentsProps) => {
     { initialNumItems: 5 }
   );
 
-  console.log(postComments);
+  // console.log(postComments);
 
   const onCreateComment = useMutation(api.comments.createComment);
   const onDeleteComment = useMutation(api.comments.deletecomment);
@@ -62,7 +62,7 @@ const Comments = ({ postId, communityName }: CommentsProps) => {
       });
       setComment("");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
 
     setPostingComment(false);
@@ -77,7 +77,7 @@ const Comments = ({ postId, communityName }: CommentsProps) => {
         commentId: commentId,
       });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
     setDeletingComment(null);
   }
@@ -167,7 +167,7 @@ const Comments = ({ postId, communityName }: CommentsProps) => {
     });
   }
 
-  console.log(status);
+  // console.log(status);w
 
   return (
     <Box bg="white" p={2} borderRadius="0px 0px 4px 4px">

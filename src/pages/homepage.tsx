@@ -25,6 +25,9 @@ export default function Homepage() {
     }
   );
 
+  console.log("homepage posts", results);
+  console.log(status);
+
   const data = results?.map((post) => (
     <PostItem
       key={post._id}
@@ -44,12 +47,28 @@ export default function Homepage() {
         {status === "LoadingFirstPage" ? (
           <PostLoader numberOfSkeletons={3} />
         ) : (
-          <Stack>
+          <Stack
+          // id="lala"
+          // overflowY="auto"
+          // maxH="650px"
+          // css={{
+          //   "&::-webkit-scrollbar": {
+          //     width: "0px",
+          //   },
+          //   "&::-webkit-scrollbar-track": {
+          //     width: "0px",
+          //   },
+          //   "&::-webkit-scrollbar-thumb": {
+          //     background: "transparent",
+          //     borderRadius: "0px",
+          //   },
+          // }}
+          >
             <PaginatedFeed
               data={data}
               hasMore={status === "CanLoadMore"}
               fetchData={() => loadMore(10)}
-              // scrollableTarget="scrollableContainer"
+              // scrollableTarget="lala"
             />
           </Stack>
         )}

@@ -26,8 +26,8 @@ export default function SearchDropdown({
 }: Props) {
   const navigate = useNavigate();
 
-  console.log(isLoading);
-  console.log(communities);
+  // console.log(isLoading);
+  // console.log(communities);
   // todo--- if communities is undefined return a skeleton component
 
   // todo -- if communities.length === 0 return a text
