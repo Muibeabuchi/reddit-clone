@@ -83,7 +83,7 @@ export default function Communities({ menuOpen }: { menuOpen: boolean }) {
             icon={FaReddit}
             displayText={`r/${snippet?.communityName}`}
             link={`/r/${snippet?.communityName}`}
-            iconColor="#47cc8aw"
+            iconColor="#47cc8a"
             imageURL={snippet?.communityImage}
           />
         ))}
