@@ -1,10 +1,10 @@
-import React from "react";
+// import React from "react";
 import { Button, Flex, Icon, Stack, Text } from "@chakra-ui/react";
 import { FaReddit } from "react-icons/fa";
 import { useSetRecoilState } from "recoil";
 import { createCommunityModal } from "@/atoms/createCommuityModal";
 import { useUser } from "@clerk/clerk-react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useDirectory from "@/hooks/useDirectory";
 
 const PersonalHome: React.FC = () => {
@@ -15,6 +15,7 @@ const PersonalHome: React.FC = () => {
 
   const { user } = useUser();
   const navigate = useNavigate();
+  const { communityName } = useParams();
 
   const { toggleMenuOpen } = useDirectory();
 
@@ -23,7 +24,7 @@ const PersonalHome: React.FC = () => {
   // const ishomepage = !!locationArray[0];
   // console.log(location);
 
-  const onClick = (communityName: string) => {
+  const onClick = () => {
     if (!user) {
       return;
     }

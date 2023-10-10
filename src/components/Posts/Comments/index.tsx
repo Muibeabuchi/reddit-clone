@@ -157,6 +157,7 @@ const Comments = ({ postId, communityName }: CommentsProps) => {
   const mutateCommentWithVote = useMutation(api.votes.voteOnComment);
 
   async function onVoteOnComment(
+    // @ts-expect-error did not use the event object
     e: React.MouseEvent<SVGElement, MouseEvent>,
     commentId: Id<"comments">,
     voteStatus: 1 | -1

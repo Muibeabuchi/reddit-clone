@@ -33,6 +33,8 @@ export interface CreateCommunityModal {
   handleClose: () => void;
 }
 
+type communityType = "private" | "restricted" | "public";
+
 export default function CreateCommunityModal({
   open,
   handleClose,
@@ -53,7 +55,7 @@ export default function CreateCommunityModal({
   const [loading, setLoading] = useState(false);
 
   function handleCommunityTypeChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setCommunityType(e.target.name);
+    setCommunityType(e.target.name as communityType);
   }
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
