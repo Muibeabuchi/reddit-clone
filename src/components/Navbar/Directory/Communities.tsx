@@ -20,7 +20,7 @@ export default function Communities({ menuOpen }: { menuOpen: boolean }) {
   const usersCommunities = useQuery(api.community.getUserCommunities);
 
   if (!usersCommunities) return;
-  console.log(usersCommunities);
+  // console.log(usersCommunities);
 
   // const isModerator =
   // console.log(user?.id);
@@ -33,9 +33,6 @@ export default function Communities({ menuOpen }: { menuOpen: boolean }) {
     <>
       <CreateCommunityModal open={communityModal} handleClose={handleClose} />
       {usersCommunities?.find((item) => {
-        console.log(
-          getUserIdFromIdentityIdentifier(item?.communityCreator) === user?.id
-        );
         return (
           getUserIdFromIdentityIdentifier(item?.communityCreator) === user?.id
         );

@@ -18,8 +18,8 @@ export default function HomeFeed() {
     }
   );
 
-  console.log("homepage posts", results);
-  console.log(status);
+  // console.log("homepage posts", results);
+  // console.log(status);
 
   const data = results?.map((post) => (
     <PostItem

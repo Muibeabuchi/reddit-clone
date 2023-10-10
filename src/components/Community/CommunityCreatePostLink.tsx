@@ -23,7 +23,7 @@ const CommunityCreatePostLink = ({
   const location = useLocation();
   // const locationArray = location.pathname.split("/");
   // const ishomepage = !!locationArray[0];
-  console.log(location);
+  // console.log(location);
 
   const onClick = () => {
     if (!user) {
