@@ -11,6 +11,7 @@ import { FaReddit } from "react-icons/fa";
 import { api } from "../../../convex/_generated/api";
 import { useMutation, useQuery } from "convex/react";
 import useJoinOrLeaveCommunity from "@/hooks/useJoinOrLeaveCommunity";
+import DrawerExample from "../Navbar/DrawerMobile";
 
 type CommunityHeaderProps = {
   communityData: Doc<"community">;
@@ -35,7 +36,16 @@ const CommunityHeader: React.FC<CommunityHeaderProps> = ({
 
   return (
     <Flex direction={"column"} width={"100%"} height="146px">
-      <Box height="50%" width="100%" bg="#47cc8a"></Box>
+      <Flex
+        height="50%"
+        width="100%"
+        bg="#47cc8a"
+        justifyContent={"flex-end"}
+        paddingX={"20px"}
+        paddingY={"20px"}
+      >
+        <DrawerExample communityData={communityData} />
+      </Flex>
       <Flex flexGrow={1} bg="white" justify="center">
         <Flex width={"95%"} maxW={"860px"}>
           {communityData?.communityImage ? (

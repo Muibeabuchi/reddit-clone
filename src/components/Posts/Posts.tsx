@@ -9,6 +9,7 @@ import { usePaginatedQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 
 import PaginatedFeed from "../InfiniteScroll/PaginatedFeed";
+import CommuityEmptyPost from "../Community/CommuityEmptyPost";
 // export type postsType =
 // type PostsProps = {
 // communityPosts: CommunityPostsAndVotes[] | undefined;
@@ -46,6 +47,10 @@ const Posts = ({
 
   if (status === "LoadingFirstPage")
     return <PostLoader numberOfSkeletons={3} />;
+
+  if (results.length === 0) {
+    return <CommuityEmptyPost communityName={communityName} />;
+  }
   return (
     <>
       {results === undefined ? (

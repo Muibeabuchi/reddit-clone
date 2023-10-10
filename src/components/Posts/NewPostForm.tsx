@@ -25,21 +25,21 @@ const formTabs: tabItem[] = [
     icon: IoDocumentText,
   },
   {
-    title: "Images & Video",
+    title: "Images",
     icon: IoImageOutline,
   },
-  {
-    title: "Link",
-    icon: BsLink45Deg,
-  },
-  {
-    title: "Talk",
-    icon: BsMic,
-  },
-  {
-    title: "Poll",
-    icon: BiPoll,
-  },
+  // {
+  //   title: "Link",
+  //   icon: BsLink45Deg,
+  // },
+  // {
+  //   title: "Talk",
+  //   icon: BsMic,
+  // },
+  // {
+  //   title: "Poll",
+  //   icon: BiPoll,
+  // },
 ];
 
 export type tabItem = {
@@ -119,7 +119,7 @@ const NewPostForm: React.FunctionComponent<IAppProps> = ({ communityName }) => {
             loading={loading}
           />
         )}
-        {selectedTab === "Images & Video" && (
+        {selectedTab === "Images" && (
           <ImageUpload
             postImage={postImage}
             selectedFile={selectedFile}

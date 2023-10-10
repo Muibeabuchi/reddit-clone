@@ -43,7 +43,7 @@ const SearchInput: React.FC = () => {
         <Input
           type="text"
           placeholder="Search Reddit"
-          fontSize="10pt"
+          fontSize={["7pt", "10pt"]}
           _placeholder={{ color: "gray.500" }}
           _hover={{
             bg: "white",

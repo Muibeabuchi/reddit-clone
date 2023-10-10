@@ -10,6 +10,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import PostLoader from "@/components/Posts/PostLoader";
 import { Id } from "convex/_generated/dataModel";
+import DrawerExample from "@/components/Navbar/DrawerMobile";
 
 export type CommunityPostsAndVotes = {
   _id: Id<"posts">;
@@ -60,6 +61,7 @@ const CommunityPage = () => {
       <PageLayout>
         <>
           <CommunityCreatePostLink communityName={communityName} />
+          {/* <DrawerExample communityData={communityData} /> */}
           <Posts
             communityName={communityName}
             // communityPosts={communityPosts}

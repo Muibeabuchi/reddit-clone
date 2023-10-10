@@ -7,8 +7,8 @@ import {
   Spinner,
   Stack,
   Text,
+  VStack,
 } from "@chakra-ui/react";
-import { Doc } from "convex/_generated/dataModel";
 import moment from "moment";
 import React, { useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -27,7 +27,7 @@ import {
   IoArrowDownCircleSharp,
   IoBookmarkOutline,
 } from "react-icons/io5";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useUser } from "@clerk/clerk-react";
@@ -200,32 +200,34 @@ Props) {
             direction={"row"}
             spacing={0.6}
             align={"center"}
+            justifyContent={"space-between"}
             fontSize={"9pt"}
           >
             {/* home page check */}
             {homepage && (
-              <>
-                {post.communityImageUrl ? (
-                  <Image
-                    borderRadius="full"
-                    boxSize="18px"
-                    src={post.communityImageUrl}
-                    mr={2}
-                  />
-                ) : (
-                  <Icon as={FaReddit} fontSize={18} mr={1} color="#47cc8a" />
-                )}
-                {/* <Link to={`r/${post.communityName}`}> */}
-                <Text
-                  fontWeight={700}
-                  _hover={{ textDecoration: "underline" }}
-                  onClick={handleNavigate}
-                >{`r/${post.communityName}`}</Text>
-                {/* </Link> */}
-                <Icon as={BsDot} color="#47cc8a" fontSize={8} />
-              </>
+              <VStack alignItems={"start"} gap={0}>
+                <Flex>
+                  {post.communityImageUrl ? (
+                    <Image
+                      borderRadius="full"
+                      boxSize="18px"
+                      src={post.communityImageUrl}
+                      mr={2}
+                    />
+                  ) : (
+                    <Icon as={FaReddit} fontSize={18} mr={1} color="#47cc8a" />
+                  )}
+                  <Text
+                    fontWeight={700}
+                    _hover={{ textDecoration: "underline" }}
+                    onClick={handleNavigate}
+                  >{`r/${post.communityName}`}</Text>
+                </Flex>
+                <Text mr={3}> Posted by u/{post.authorName} </Text>
+              </VStack>
             )}
-            <Text mr={3}> Posted by u/{post.authorName} </Text>
+            {!homepage && <Text mr={3}> Posted by u/{post.authorName} </Text>}
+            <Icon as={BsDot} color="#47cc8a" fontSize={8} />
             <Text>{moment(new Date(post._creationTime)).fromNow()}</Text>
           </Stack>
           <Text fontSize="12pt" fontWeight={600}>

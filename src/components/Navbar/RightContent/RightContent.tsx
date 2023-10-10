@@ -26,7 +26,7 @@ const RightContent: React.FC = () => {
       <AuthModal />
 
       <Flex justify="center" align="center">
-        <Icons />
+        {/* <Icons /> */}
         <AuthButtons />
         <UserMenu />
       </Flex>
