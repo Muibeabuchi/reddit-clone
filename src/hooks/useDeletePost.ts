@@ -33,9 +33,7 @@ export default function useDeletePost() {
     try {
       await deletPost({ postId });
       if (isSinglePage) return navigate(`/r/${communityName}`);
-    } catch (error: {
-      message: string;
-    }) {
+    } catch (error) {
       // console.log(error);
       toast({
         title: "Unauthorized action, can't delete this post",

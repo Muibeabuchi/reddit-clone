@@ -1,9 +1,9 @@
 import { Alert, AlertIcon, Text } from "@chakra-ui/react";
-import React from "react";
+// import React from "react";
 
-type Props = {};
+// type Props = {};
 
-export default function PostErrorAlert({}: Props) {
+export default function PostErrorAlert() {
   return (
     <Alert status="error">
       <AlertIcon />

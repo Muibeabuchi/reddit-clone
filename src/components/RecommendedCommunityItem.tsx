@@ -1,12 +1,12 @@
 import useJoinOrLeaveCommunity from "@/hooks/useJoinOrLeaveCommunity";
-import { getUserIdFromIdentityIdentifier } from "@/utils/helperFunctions";
+// import { getUserIdFromIdentityIdentifier } from "@/utils/helperFunctions";
 import { Flex, Icon, Button, Box, Image, Text } from "@chakra-ui/react";
-import { useUser } from "@clerk/clerk-react";
+// import { useUser } from "@clerk/clerk-react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 // import { Box } from "framer-motion";
-import React, { useMemo } from "react";
+// import React, { useMemo } from "react";
 import { FaReddit } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
@@ -17,7 +17,7 @@ export type RecommendedCommunityItemType = {
   creatorId: string;
   communityName: string;
   communityType: "private" | "public" | "restricted";
-  communityMembers: string[];
+  // communityMembers: string[];
 };
 
 export default function RecommendedCommunityItem({
@@ -27,7 +27,7 @@ export default function RecommendedCommunityItem({
   item: RecommendedCommunityItemType;
   index: number;
 }) {
-  const { user } = useUser();
+  // const { user } = useUser();
   const { onJoinOrLeaveCommunity, loading } = useJoinOrLeaveCommunity();
 
   const isJoined = useQuery(api.usersCommunities.isMemberOfCommunity, {

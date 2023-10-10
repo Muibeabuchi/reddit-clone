@@ -1,5 +1,3 @@
-"use client";
-
 import { Button, Flex, Input, Stack, Textarea } from "@chakra-ui/react";
 import * as React from "react";
 

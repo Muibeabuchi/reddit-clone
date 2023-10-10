@@ -1,10 +1,10 @@
-import React, { MouseEventHandler, useState } from "react";
+// import React, { MouseEventHandler, useState } from "react";
 import { Flex, Textarea, Button, Text } from "@chakra-ui/react";
 import AuthButtons from "../../Navbar/RightContent/AuthButtons";
 import { useUser } from "@clerk/clerk-react";
-import { ReactMutation } from "convex/react";
-import { FunctionReference } from "convex/server";
-import { Id } from "convex/_generated/dataModel";
+// import { ReactMutation } from "convex/react";
+// import { FunctionReference } from "convex/server";
+// import { Id } from "convex/_generated/dataModel";
 
 type CommentInputProps = {
   comment: string;

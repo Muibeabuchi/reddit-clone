@@ -1,4 +1,4 @@
-import { useState } from "react";
+// import { useState } from "react";
 import CreateCommunityModal from "@/components/Modal/CreateCommunity/CreateCommunityModal";
 import { Box, Flex, Icon, MenuItem, Text } from "@chakra-ui/react";
 import { GrAdd } from "react-icons/gr";
@@ -11,7 +11,7 @@ import { FaReddit } from "react-icons/fa";
 import { useRecoilState } from "recoil";
 import { createCommunityModal } from "@/atoms/createCommuityModal";
 
-export default function Communities({ menuOpen }: { menuOpen: boolean }) {
+export default function Communities() {
   const { user } = useUser();
 
   const [communityModal, setCommunityModal] =

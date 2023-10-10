@@ -41,7 +41,7 @@ const Directory = () => {
     <>
       <Authenticated>
         <Menu isOpen={directoryState.isOpen}>
-          {({ isOpen }) => (
+          {() => (
             <>
               <MenuButton
                 cursor="pointer"
@@ -110,7 +110,7 @@ const Directory = () => {
                   },
                 }}
               >
-                <Communities menuOpen={isOpen} />
+                <Communities />
               </MenuList>
             </>
           )}

@@ -21,7 +21,7 @@ const Posts = ({
 }: {
   communityName: string;
 }): React.ReactNode => {
-  const { isLoading, loadMore, results, status } = usePaginatedQuery(
+  const { loadMore, results, status } = usePaginatedQuery(
     api.posts.getCommunityPosts,
     {
       communityName,

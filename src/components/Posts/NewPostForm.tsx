@@ -1,7 +1,7 @@
 import { Flex, Icon } from "@chakra-ui/react";
 import * as React from "react";
-import { BiPoll } from "react-icons/bi";
-import { BsLink45Deg, BsMic } from "react-icons/bs";
+// import { BiPoll } from "react-icons/bi";
+// import { BsLink45Deg, BsMic } from "react-icons/bs";
 import { IoDocumentText, IoImageOutline } from "react-icons/io5";
 import TabItem from "./TabItem";
 import TextInputs from "./PostForm/TextInputs";
@@ -56,7 +56,7 @@ const NewPostForm: React.FunctionComponent<IAppProps> = ({ communityName }) => {
     body: "",
   });
   const { setSelectedFile, selectedFile, onSelectImage } = useSelectFile();
-  const { setPostImage, postImage, handleCreatePostImage, isLoading } =
+  const { setPostImage, postImage, handleCreatePostImage } =
     useCreatePostImage();
   const [loading, setLoading] = React.useState(false);
   // const [error, setError] = React.useState(false);

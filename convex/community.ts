@@ -379,7 +379,7 @@ export const searchedCommunities = query({
         const image = await ctx.storage.getUrl(item.communityImage);
         return {
           ...item,
-          communityImage: image,
+          communityImage: image ? image : "",
         };
       })
     );

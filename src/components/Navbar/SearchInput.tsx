@@ -1,7 +1,7 @@
 import useSearchCommunities from "@/hooks/useSearchCommunities";
 import { SearchIcon } from "@chakra-ui/icons";
 import {
-  Flex,
+  // Flex,
   Input,
   InputGroup,
   InputLeftElement,

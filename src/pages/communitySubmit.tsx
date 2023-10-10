@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import CommunityAbout from "@/components/Community/CommunityAbout/CommunityAbout";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { Box, Flex, VStack } from "@chakra-ui/react";
+// import { Box, Flex, VStack } from "@chakra-ui/react";
 
 // type SubmitPageProps = {
 //   params: {

@@ -1,15 +1,15 @@
 // import { Community } from "@/atoms/communitiesAtom";
 import {
   getUserIdFromIdentityIdentifier,
-  isUserMemberOfCommunity,
+  // isUserMemberOfCommunity,
 } from "@/utils/helperFunctions";
-import { Box, Flex, Icon, Image, Text, Button } from "@chakra-ui/react";
+import { Flex, Icon, Image, Text, Button } from "@chakra-ui/react";
 import { useUser } from "@clerk/clerk-react";
 import { Doc } from "convex/_generated/dataModel";
-import React, { useState } from "react";
+// import React, { useState } from "react";
 import { FaReddit } from "react-icons/fa";
 import { api } from "../../../convex/_generated/api";
-import { useMutation, useQuery } from "convex/react";
+import { useQuery } from "convex/react";
 import useJoinOrLeaveCommunity from "@/hooks/useJoinOrLeaveCommunity";
 import DrawerExample from "../Navbar/DrawerMobile";
 

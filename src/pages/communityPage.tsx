@@ -8,9 +8,9 @@ import CommunityAbout from "@/components/Community/CommunityAbout/CommunityAbout
 import { useParams } from "react-router-dom";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import PostLoader from "@/components/Posts/PostLoader";
+// import PostLoader from "@/components/Posts/PostLoader";
 import { Id } from "convex/_generated/dataModel";
-import DrawerExample from "@/components/Navbar/DrawerMobile";
+// import DrawerExample from "@/components/Navbar/DrawerMobile";
 
 export type CommunityPostsAndVotes = {
   _id: Id<"posts">;

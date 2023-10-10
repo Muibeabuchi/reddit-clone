@@ -3,12 +3,12 @@ import { Flex } from "@chakra-ui/react";
 import SearchInput from "./SearchInput";
 import RightContent from "./RightContent/RightContent";
 import Directory from "./Directory/Directory";
-import Communities from "./Directory/Communities";
+// import Communities from "./Directory/Communities";
 import useStoreUserEffect from "@/hooks/useStoreUser";
 import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
-  const userId = useStoreUserEffect();
+  useStoreUserEffect();
   const navigate = useNavigate();
   // console.log(userId);
   return (

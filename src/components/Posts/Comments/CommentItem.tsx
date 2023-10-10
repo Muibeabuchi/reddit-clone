@@ -18,7 +18,7 @@ import {
   IoArrowUpCircleOutline,
   IoArrowUpCircleSharp,
 } from "react-icons/io5";
-import { Doc, Id } from "convex/_generated/dataModel";
+import { Id } from "convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { CommentWithVotesType } from "convex/comments";

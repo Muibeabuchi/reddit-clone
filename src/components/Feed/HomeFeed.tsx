@@ -8,7 +8,7 @@ import PostLoader from "../Posts/PostLoader";
 import PaginatedFeed from "../InfiniteScroll/PaginatedFeed";
 
 export default function HomeFeed() {
-  const { results, loadMore, isLoading, status } = usePaginatedQuery(
+  const { results, loadMore, status } = usePaginatedQuery(
     api.posts.getHomepageFeedUnauthenticated,
     {
       //   userAuthToken: user?.id,

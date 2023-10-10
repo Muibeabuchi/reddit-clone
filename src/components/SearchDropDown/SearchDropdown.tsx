@@ -1,14 +1,14 @@
 import {
   Avatar,
-  Box,
+  // Box,
   Flex,
-  Skeleton,
+  // Skeleton,
   Stack,
   Text,
-  calc,
+  // calc,
 } from "@chakra-ui/react";
 import { Doc } from "convex/_generated/dataModel";
-import React from "react";
+// import React from "react";
 import { useNavigate } from "react-router-dom";
 import SearchCommunitySkeleton from "./SearchCommunitySkeleton";
 // import { Link } from "react-router-dom";
@@ -55,7 +55,7 @@ export default function SearchDropdown({
       // minHeight="40px"
       // justifyContent="center"
     >
-      {communities?.length <= 0 && (
+      {communities && communities?.length <= 0 && (
         <Text fontSize="10px" textAlign="center">
           Sorry, no commuities matched your text
         </Text>

@@ -14,7 +14,7 @@ import { useMutation, usePaginatedQuery, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { useUser } from "@clerk/clerk-react";
-import { CommentWithVotesType } from "convex/comments";
+// import { CommentWithVotesType } from "convex/comments";
 
 type CommentsProps = {
   postId: Id<"posts">;
