@@ -83,8 +83,9 @@ Props) {
 
   const [loadingImage, setLoadingImage] = React.useState(true);
 
-  const [mutationError, setMutationError] = React.useState();
-  const [loadingVote, setLoadingVote] = useState(false);
+  // const [mutationError, setMutationError] = React.useState();
+  const [loadingUpVote, setLoadingUpVote] = useState(false);
+  const [loadingDownVote, setLoadingDownVote] = useState(false);
 
   const {
     handlePostDelete,
@@ -97,7 +98,11 @@ Props) {
     voteStatus: 1 | -1
   ) {
     e.stopPropagation();
-    setLoadingVote(true);
+    if (voteStatus === 1) {
+      setLoadingUpVote(true);
+    } else if (voteStatus === -1) {
+      setLoadingDownVote(true);
+    }
     try {
       await voteMutation({
         voteStatus,
@@ -105,10 +110,14 @@ Props) {
       });
       // console.log("voting completeted");
     } catch (error) {
-      setMutationError(error);
+      // setMutationError(error);
       // console.log("voting error", error);
     } finally {
-      setLoadingVote(false);
+      if (voteStatus === 1) {
+        setLoadingUpVote(false);
+      } else if (voteStatus === -1) {
+        setLoadingDownVote(false);
+      }
     }
   }
 
@@ -136,45 +145,54 @@ Props) {
         width="40px"
         borderRadius={singlePostView ? "0" : "3px 0px 0px 3px"}
       >
-        <Icon
-          as={
-            user
-              ? postVotes?.voteStatus === 1
-                ? IoArrowUpCircleSharp
+        {loadingUpVote ? (
+          <Spinner size="xs" color="#47cc8a" />
+        ) : (
+          <Icon
+            as={
+              user
+                ? postVotes?.voteStatus === 1
+                  ? IoArrowUpCircleSharp
+                  : IoArrowUpCircleOutline
                 : IoArrowUpCircleOutline
-              : IoArrowUpCircleOutline
-          }
-          color={
-            user
-              ? postVotes?.voteStatus === 1
-                ? "brand.100"
+            }
+            color={
+              user
+                ? postVotes?.voteStatus === 1
+                  ? "brand.100"
+                  : "gray.400"
                 : "gray.400"
-              : "gray.400"
-          }
-          fontSize={22}
-          onClick={(e) => onVote(e, 1)}
-          cursor={"pointer"}
-        />
+            }
+            fontSize={22}
+            onClick={(e) => onVote(e, 1)}
+            cursor={"pointer"}
+          />
+        )}
         <Text fontSize="9pt">{post.numberOfVotes}</Text>
-        <Icon
-          as={
-            user
-              ? postVotes?.voteStatus === -1
-                ? IoArrowDownCircleSharp
+
+        {loadingDownVote ? (
+          <Spinner size="xs" color="red.400" />
+        ) : (
+          <Icon
+            as={
+              user
+                ? postVotes?.voteStatus === -1
+                  ? IoArrowDownCircleSharp
+                  : IoArrowDownCircleOutline
                 : IoArrowDownCircleOutline
-              : IoArrowDownCircleOutline
-          }
-          color={
-            user
-              ? postVotes?.voteStatus === -1
-                ? "red.400"
+            }
+            color={
+              user
+                ? postVotes?.voteStatus === -1
+                  ? "red.400"
+                  : "gray.400"
                 : "gray.400"
-              : "gray.400"
-          }
-          fontSize={22}
-          onClick={(e) => onVote(e, -1)}
-          cursor={"pointer"}
-        />
+            }
+            fontSize={22}
+            onClick={(e) => onVote(e, -1)}
+            cursor={"pointer"}
+          />
+        )}
       </Flex>
       <Flex direction={"column"} width="100%">
         <Stack spacing={1} p="10px">
