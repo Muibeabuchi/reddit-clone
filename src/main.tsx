@@ -11,11 +11,11 @@ import { ConvexProviderWithClerk } from "convex/react-clerk";
 
 const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string);
 
-const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+// const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ClerkProvider publishableKey={clerkPubKey}>
+    <ClerkProvider publishableKey="pk_test_ZHluYW1pYy1ob3JzZS0yMi5jbGVyay5hY2NvdW50cy5kZXYk">
       <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
         <Providers />
         {/* <p>hello</p> */}
